@@ -6,7 +6,7 @@ import { useState } from "react";
 import { FaArrowLeft, FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 
 export default function FavoritesPage() {
-    const [favorites, setFavorites] = useState<number[]>([]);
+    const [, setFavorites] = useState<number[]>([]);
 
     const toggleFavorite = (movieId: number) => {
         setFavorites(prev =>
