@@ -1,10 +1,22 @@
+import { featuredMovies } from "@/data/ActionData"; // or allMovies if you combine all
 import { Category } from "@/types/Movie";
 
-export const categories: Category[] = [
-  { name: "Action", type: "action", count: 156 },
-  { name: "Comedy", type: "comedy", count: 98 },
-  { name: "Drama", type: "drama", count: 124 },
-  { name: "Horror", type: "horror", count: 87 },
-  { name: "Romance", type: "romance", count: 112 },
-  { name: "Sci-Fi", type: "sci-fi", count: 76 },
+const categoryTypes = [
+  "action",
+  "comedy",
+  "drama",
+  "horror",
+  "romance",
+  "sci-fi",
 ];
+
+export const categories: Category[] = categoryTypes.map((type) => {
+  const name = type.charAt(0).toUpperCase() + type.slice(1).replace("-", " ");
+  const count = featuredMovies.filter((movie) => movie.type === type).length;
+
+  return {
+    name,
+    type,
+    count,
+  };
+});
