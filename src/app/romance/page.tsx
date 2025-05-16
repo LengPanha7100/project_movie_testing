@@ -4,7 +4,7 @@ import { Movie } from "@/types/Movie";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaFilter, FaHeart, FaRegHeart, FaSearch, FaStar } from "react-icons/fa";
-const page = () => {
+const Page = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const router = useRouter();
     const filterDataMovie = featuredMovies.filter((movie) =>
@@ -138,4 +138,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page
