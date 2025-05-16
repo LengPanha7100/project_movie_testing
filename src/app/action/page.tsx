@@ -8,8 +8,11 @@ const page = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const router = useRouter();
     const filterDataMovie = featuredMovies.filter((movie) =>
+        movie.type === "action" &&
         movie.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
+
+    console.log(filterDataMovie)
     return (
         <main className="min-h-screen bg-[#0a0a0a] text-white">
             {/* Gradient Background */}

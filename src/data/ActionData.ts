@@ -219,7 +219,7 @@ export const featuredMovies: Movie[] = [
     description:
       "After finding an old letter from a long-lost love, a retired professor sets out to uncover the truth behind a decades-old heartbreak.",
     image:
-      "https://images.unsplash.com/photo-1544717305-2782549b5136?ixlib=rb-4.0.3&auto=format&fit=crop&w=1024&q=80",
+      "https://jang.com.pk/assets/uploads/updates/2024-08-19/18665_4257250_top5kdramastobingewatchnow_updates.jpg",
     isFavorite: false,
   },
   {
@@ -232,8 +232,7 @@ export const featuredMovies: Movie[] = [
     duration: "2h 10m",
     description:
       "A determined attorney takes on a powerful corporation in a high-stakes case that challenges her morals and tests her resilience.",
-    image:
-      "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=1024&q=80",
+    image: "https://eduindex.org/wp-content/uploads/2021/07/image-315.png",
     isFavorite: false,
   },
   {
@@ -247,7 +246,7 @@ export const featuredMovies: Movie[] = [
     description:
       "A struggling musician returns home after years away, only to confront painful memories and rebuild ties with his estranged family.",
     image:
-      "https://images.unsplash.com/photo-1615486362106-5a9e02c86f70?ixlib=rb-4.0.3&auto=format&fit=crop&w=1024&q=80",
+      "https://images.news18.com/ibnlive/uploads/2024/06/season-2-2024-06-810938a17982e55673eeec6e8ac6fd78.jpg",
     isFavorite: true,
   },
   {
@@ -261,7 +260,7 @@ export const featuredMovies: Movie[] = [
     description:
       "A grieving journalist investigates her sister’s mysterious death, unraveling a trail of secrets in a small, quiet town.",
     image:
-      "https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1024&q=80",
+      "https://images.saymedia-content.com/.image/t_share/MTc1MTEyNzEwMzQ5NzI2ODE1/the-10-best-teenagehighschool-korean-dramas-ever.jpg",
     isFavorite: false,
   },
   {
@@ -275,7 +274,7 @@ export const featuredMovies: Movie[] = [
     description:
       "An ex-gang member tries to rebuild his life and reconnect with his daughter, but his violent past refuses to stay buried.",
     image:
-      "https://images.unsplash.com/photo-1504593811423-6dd665756598?ixlib=rb-4.0.3&auto=format&fit=crop&w=1024&q=80",
+      "https://images.saymedia-content.com/.image/t_share/MTc2MDEyMTQzODc3OTU3NTEx/the-10-best-teenagehighschool-korean-dramas-ever.jpg",
     isFavorite: true,
   },
   {
@@ -288,8 +287,7 @@ export const featuredMovies: Movie[] = [
     duration: "2h 8m",
     description:
       "A psychiatrist begins to question his own sanity when a patient’s disturbing confessions mirror his own suppressed memories.",
-    image:
-      "https://images.unsplash.com/photo-1521519402163-6d2f978d38c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1024&q=80",
+    image: "https://i.ytimg.com/vi/w_U_YZAlUzI/maxresdefault.jpg",
     isFavorite: false,
   },
   {
@@ -303,7 +301,175 @@ export const featuredMovies: Movie[] = [
     description:
       "A young refugee girl’s journey from survival to success in a foreign land shows the power of resilience and hope.",
     image:
-      "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1024&q=80",
+      "https://qqcdnpictest.mxplay.com/pic/02c117c01a5d485bcc0c05d002a23b8c/en/2x3/480x720/test_pic1740562402161.webp",
     isFavorite: true,
+  },
+  {
+    id: 23,
+    title: "The Haunting Within",
+    genre: "Horror/Supernatural",
+    type: "horror",
+    rating: 4.6,
+    year: 2024,
+    duration: "1h 55m",
+    description:
+      "A family moves into a secluded countryside manor, only to discover a dark presence lurking beneath the floorboards.",
+    image:
+      "https://cdn.hmv.com/r/w-640/hmv/files/1a/1a3a223c-03a6-4207-93d4-437c910c42bc.jpg",
+    isFavorite: false,
+  },
+  {
+    id: 24,
+    title: "Whispers in the Woods",
+    genre: "Horror/Thriller",
+    type: "horror",
+    rating: 4.5,
+    year: 2024,
+    duration: "2h",
+    description:
+      "A hiking trip turns deadly when a group of friends encounters an ancient curse buried deep in the forest.",
+    image:
+      "https://m.media-amazon.com/images/M/MV5BZjg0ZmQyYzgtMjg5Ni00NWY3LWIzYjgtYmEzODdkMTIzOTY4XkEyXkFqcGc@._V1_.jpg0",
+    isFavorite: false,
+  },
+  {
+    id: 25,
+    title: "Mirror of Souls",
+    genre: "Horror/Psychological",
+    type: "horror",
+    rating: 4.7,
+    year: 2024,
+    duration: "1h 48m",
+    description:
+      "An antique mirror reveals twisted versions of reality — and drags its viewers into a deadly alternate world.",
+    image:
+      "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1639105896i/59784453.jpg",
+    isFavorite: true,
+  },
+  {
+    id: 26,
+    title: "The Basement Ritual",
+    genre: "Horror/Occult",
+    type: "horror",
+    rating: 4.4,
+    year: 2024,
+    duration: "1h 45m",
+    description:
+      "Teenagers stumble upon a satanic ritual in a forgotten basement — and accidentally awaken something far worse.",
+    image:
+      "https://i.ytimg.com/vi/XNWwCbrdmac/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCA4s4FqJoHqjIBVBs_32DRrWvddg",
+    isFavorite: false,
+  },
+  {
+    id: 27,
+    title: "Dead Hour",
+    genre: "Horror/Suspense",
+    type: "horror",
+    rating: 4.5,
+    year: 2024,
+    duration: "2h",
+    description:
+      "A radio DJ receives a mysterious call on air that foretells each listener's death. The countdown has begun.",
+    image:
+      "https://m.media-amazon.com/images/M/MV5BMjBlNjQ1NmQtMGI4Zi00Zjc0LTkxNjMtYWEyYWIyNWYwZTE0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+    isFavorite: true,
+  },
+  {
+    id: 28,
+    title: "Beneath the Silence",
+    genre: "Horror/Haunting",
+    type: "horror",
+    rating: 4.6,
+    year: 2024,
+    duration: "2h 5m",
+    description:
+      "A deaf girl starts hearing whispers in an abandoned orphanage — and the ghosts want more than to be heard.",
+    image:
+      "https://m.media-amazon.com/images/M/MV5BYTJjYmVkNGItMTkyYi00MzZmLWJjOTMtOWRhNmMxMTllYTk2XkEyXkFqcGc@._V1_.jpg",
+    isFavorite: false,
+  },
+  {
+    id: 29,
+    title: "Crimson Chapel",
+    genre: "Horror/Gothic",
+    type: "horror",
+    rating: 4.7,
+    year: 2024,
+    duration: "2h 2m",
+    description:
+      "Investigators explore a long-abandoned church where every visitor meets a gruesome fate — and something waits at the altar.",
+    image:
+      "https://m.media-amazon.com/images/I/71Aw83G1ejL._UF1000,1000_QL80_.jpg",
+    isFavorite: true,
+  },
+  {
+    id: 30,
+    title: "Letters from Autumn",
+    genre: "Romance/Drama",
+    type: "romance",
+    rating: 4.8,
+    year: 2024,
+    duration: "2h 1m",
+    description:
+      "Two strangers exchange letters by mistake, only to discover a deep connection that leads to an unexpected love story.",
+    image:
+      "https://i.ytimg.com/vi/8Iy0TOF3kQY/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCmJijbb3LOB405-1XwycG0HX0lxw",
+    isFavorite: false,
+  },
+  {
+    id: 31,
+    title: "Moonlight Serenade",
+    genre: "Romance/Musical",
+    type: "romance",
+    rating: 4.7,
+    year: 2024,
+    duration: "2h",
+    description:
+      "A jazz singer and a struggling writer meet under the Parisian moonlight, creating music and memories that will last a lifetime.",
+    image:
+      "https://i5.walmartimages.com/seo/Carly-Simon-A-Moonlight-Serenade-on-the-Queen-Mary-2-DVD_a18575da-2af1-4da9-be99-eb767807d627.c2ad21da59001054f7ab6cd9c1a3e1c7.jpeg",
+    isFavorite: true,
+  },
+  {
+    id: 32,
+    title: "Before the Last Train",
+    genre: "Romance/Slice of Life",
+    type: "romance",
+    rating: 4.6,
+    year: 2024,
+    duration: "1h 55m",
+    description:
+      "Two travelers meet at a train station and fall in love during one unforgettable evening before they must part ways forever.",
+    image:
+      "https://m.media-amazon.com/images/M/MV5BZDZhZmI1ZTUtYWI3NC00NTMwLTk3NWMtNDc0OGNjM2I0ZjlmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+    isFavorite: false,
+  },
+  {
+    id: 33,
+    title: "Love in Bloom",
+    genre: "Romance/Feel-Good",
+    type: "romance",
+    rating: 4.5,
+    year: 2024,
+    duration: "1h 50m",
+    description:
+      "A florist and a city architect clash over a park renovation, but their feud turns into flirtation as spring blossoms.",
+    image:
+      "https://m.media-amazon.com/images/M/MV5BMDk3N2RkNjMtYWFiMS00ODk2LWFiNmMtZTExYjA5OThlYzEzXkEyXkFqcGc@._V1_.jpg",
+    isFavorite: true,
+  },
+  {
+    id: 34,
+    title: "The Art of Falling",
+    genre: "Romance/Comedy",
+    type: "romance",
+    rating: 4.6,
+    year: 2024,
+    duration: "2h 3m",
+    description:
+      "An uptight lawyer and a free-spirited painter fall for each other through a series of unexpected mishaps and heartfelt moments.",
+    image:
+      "https://resizing.flixster.com/fTyhZtOVpcVaYFySDatNaPFJlWI=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p17016122_k_v13_aa.jpg",
+    isFavorite: false,
   },
 ];
