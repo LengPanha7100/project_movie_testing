@@ -3,7 +3,7 @@ import { featuredMovies } from '@/data/ActionData';
 import { featuredMovie } from '@/data/ActionData1';
 import { categories } from '@/data/CategoriesData';
 import { Movie } from '@/types/Movie';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { FaChevronLeft, FaChevronRight, FaFilter, FaHeart, FaPlay, FaRegHeart, FaSearch, FaStar, FaTicketAlt } from 'react-icons/fa';
 
@@ -13,6 +13,9 @@ export default function Home() {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const router = useRouter();
 
+    const searchParams = useSearchParams();
+    const bookingCountParam = searchParams.get('bookingCount');
+    const bookingCount = bookingCountParam ? Number(bookingCountParam) : 0;
 
     const handleCategoryClick = (name: string) => {
         const path = name.toLowerCase().replace(/\s+/g, '-');
@@ -127,7 +130,7 @@ export default function Home() {
                         </button>
                         <button className="flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-200">
                             <FaTicketAlt className="mr-2" />
-                            Book Now (2)
+                            Book Now {bookingCount}
                         </button>
                     </div>
                 </div>
