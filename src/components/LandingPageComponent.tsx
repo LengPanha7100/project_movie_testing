@@ -4,7 +4,7 @@ import { featuredMovie } from '@/data/ActionData1';
 import { categories } from '@/data/CategoriesData';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
-import { FaChevronLeft, FaChevronRight, FaFilter, FaHeart, FaPlay, FaRegHeart, FaSearch, FaStar } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaFilter, FaHeart, FaPlay, FaRegHeart, FaSearch, FaStar, FaTicketAlt } from 'react-icons/fa';
 
 
 
@@ -91,6 +91,10 @@ export default function Home() {
                         <button className="flex items-center px-6 py-3 bg-gray-800/50 border border-gray-700/50 rounded-lg hover:bg-gray-700/50 transition-colors duration-200">
                             <FaFilter className="mr-2" />
                             Filter
+                        </button>
+                        <button className="flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-200">
+                            <FaTicketAlt className="mr-2" />
+                            Book Now (2)
                         </button>
                     </div>
                 </div>
