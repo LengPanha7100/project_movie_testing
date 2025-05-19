@@ -225,7 +225,7 @@ export default function Home() {
                                                         {movie.description.length > 100 && (
                                                             <button
                                                                 onClick={(e) => {
-                                                                    e.preventDefault();
+                                                                    e.stopPropagation();
                                                                     setShowAll(!showAll)
                                                                 }
                                                                 }
