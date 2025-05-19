@@ -14,6 +14,8 @@ export const featuredMovies: Movie[] = [
     image:
       "https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1025&q=80",
     isFavorite: false,
+    cast: ["Emma Clark", "Liam Patel", "Noah Lee", "Sophia Rivera"],
+    director: "Greta West",
   },
   {
     id: 2,
@@ -423,6 +425,8 @@ export const featuredMovies: Movie[] = [
     image:
       "https://m.media-amazon.com/images/M/MV5BMjBlNjQ1NmQtMGI4Zi00Zjc0LTkxNjMtYWEyYWIyNWYwZTE0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
     isFavorite: true,
+    cast: ["Emma Clark", "Liam Patel", "Noah Lee", "Sophia Rivera"],
+    director: "Greta West",
   },
   {
     id: 28,
@@ -437,6 +441,8 @@ export const featuredMovies: Movie[] = [
     image:
       "https://m.media-amazon.com/images/M/MV5BYTJjYmVkNGItMTkyYi00MzZmLWJjOTMtOWRhNmMxMTllYTk2XkEyXkFqcGc@._V1_.jpg",
     isFavorite: false,
+    cast: ["Emma Clark", "Liam Patel", "Noah Lee", "Sophia Rivera"],
+    director: "Greta West",
   },
   {
     id: 29,
@@ -451,6 +457,8 @@ export const featuredMovies: Movie[] = [
     image:
       "https://m.media-amazon.com/images/I/71Aw83G1ejL._UF1000,1000_QL80_.jpg",
     isFavorite: true,
+    cast: ["Emma Clark", "Liam Patel", "Noah Lee", "Sophia Rivera"],
+    director: "Greta West",
   },
   {
     id: 30,
@@ -465,6 +473,8 @@ export const featuredMovies: Movie[] = [
     image:
       "https://i.ytimg.com/vi/8Iy0TOF3kQY/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCmJijbb3LOB405-1XwycG0HX0lxw",
     isFavorite: false,
+    cast: ["Emma Clark", "Liam Patel", "Noah Lee", "Sophia Rivera"],
+    director: "Greta West",
   },
   {
     id: 31,
@@ -479,6 +489,8 @@ export const featuredMovies: Movie[] = [
     image:
       "https://i5.walmartimages.com/seo/Carly-Simon-A-Moonlight-Serenade-on-the-Queen-Mary-2-DVD_a18575da-2af1-4da9-be99-eb767807d627.c2ad21da59001054f7ab6cd9c1a3e1c7.jpeg",
     isFavorite: true,
+    cast: ["Emma Clark", "Liam Patel", "Noah Lee", "Sophia Rivera"],
+    director: "Greta West",
   },
   {
     id: 32,
@@ -493,6 +505,8 @@ export const featuredMovies: Movie[] = [
     image:
       "https://m.media-amazon.com/images/M/MV5BZDZhZmI1ZTUtYWI3NC00NTMwLTk3NWMtNDc0OGNjM2I0ZjlmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
     isFavorite: false,
+    cast: ["Emma Clark", "Liam Patel", "Noah Lee", "Sophia Rivera"],
+    director: "Greta West",
   },
   {
     id: 33,
@@ -507,6 +521,8 @@ export const featuredMovies: Movie[] = [
     image:
       "https://m.media-amazon.com/images/M/MV5BMDk3N2RkNjMtYWFiMS00ODk2LWFiNmMtZTExYjA5OThlYzEzXkEyXkFqcGc@._V1_.jpg",
     isFavorite: true,
+    cast: ["Emma Clark", "Liam Patel", "Noah Lee", "Sophia Rivera"],
+    director: "Greta West",
   },
   {
     id: 34,
@@ -521,5 +537,7 @@ export const featuredMovies: Movie[] = [
     image:
       "https://resizing.flixster.com/fTyhZtOVpcVaYFySDatNaPFJlWI=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p17016122_k_v13_aa.jpg",
     isFavorite: false,
+    cast: ["Emma Clark", "Liam Patel", "Noah Lee", "Sophia Rivera"],
+    director: "Greta West",
   },
 ];

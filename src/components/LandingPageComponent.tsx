@@ -2,6 +2,7 @@
 import { featuredMovies } from '@/data/ActionData';
 import { featuredMovie } from '@/data/ActionData1';
 import { categories } from '@/data/CategoriesData';
+import { Movie } from '@/types/Movie';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { FaChevronLeft, FaChevronRight, FaFilter, FaHeart, FaPlay, FaRegHeart, FaSearch, FaStar, FaTicketAlt } from 'react-icons/fa';
@@ -32,6 +33,38 @@ export default function Home() {
         movie.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
     const [showAll, setShowAll] = useState(false);
+
+    const MovieCard = ({ movie }: { movie: Movie }) => (
+        <div
+            onClick={() => router.push(`/detail/${movie.id}`)}
+            className="group bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 cursor-pointer"
+        >
+            <div className="relative">
+                <img src={movie.image} alt={movie.title} className="w-full h-72 object-cover" />
+                <button className="absolute top-4 right-4 p-2 bg-gray-900/80 rounded-full hover:bg-red-600 transition-colors duration-200" onClick={e => e.stopPropagation()}>
+                    {movie.isFavorite ? <FaHeart className="text-red-500" /> : <FaRegHeart className="text-white" />}
+                </button>
+            </div>
+            <div className="p-6">
+                <div className="flex justify-between items-start mb-3">
+                    <h3 className="text-xl font-semibold text-white">{movie.title}</h3>
+                    <div className="flex items-center bg-gray-700/50 px-2 py-1 rounded">
+                        <FaStar className="text-yellow-400 mr-1" />
+                        <span className="text-white">{movie.rating}</span>
+                    </div>
+                </div>
+                <div className="flex items-center text-gray-400 text-sm mb-4">
+                    <span>{movie.year}</span>
+                    <span className="mx-2">•</span>
+                    <span>{movie.duration}</span>
+                    <span className="mx-2">•</span>
+                    <span>{movie.genre}</span>
+                </div>
+                <p className="text-gray-300 text-sm leading-relaxed">{movie.description}</p>
+            </div>
+        </div>
+    );
+
 
 
     return (
@@ -100,138 +133,110 @@ export default function Home() {
                 </div>
 
                 {/* Movie Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredMovies.length > 0 ? (
-                        filteredMovies.map((movie) => (
-                            <div
-                                key={movie.id}
-                                onClick={() => router.push(`/detail/${movie.id}`)}
-                                className="group bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 cursor-pointer"
-                            >
-                                <div className="relative">
-                                    <img
-                                        src={movie.image}
-                                        alt={movie.title}
-                                        className="w-full h-72 object-cover"
-                                    />
-                                    <button className="absolute top-4 right-4 p-2 bg-gray-900/80 rounded-full hover:bg-red-600 transition-colors duration-200">
-                                        {movie.isFavorite ? (
-                                            <FaHeart className="text-red-500" />
-                                        ) : (
-                                            <FaRegHeart className="text-white" />
-                                        )}
-                                    </button>
+                <div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {searchQuery.trim() === "" ? (
+                            // No search query — show all movies or filteredMovies as default
+                            filteredMovies.map((movie) => (
+                                <MovieCard key={movie.id} movie={movie} />
+                            ))
+                        ) : filteredMovies.length > 0 ? (
+                            // Search query present & has results
+                            filteredMovies.map((movie) => (
+                                <MovieCard key={movie.id} movie={movie} />
+                            ))
+                        ) : (
+                            // Search query present but no results
+                            <div className="col-span-full flex flex-col items-center justify-center py-20">
+                                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
+                                    <FaSearch className="w-8 h-8 text-white/20" />
                                 </div>
-                                <div className="p-6">
-                                    <div className="flex justify-between items-start mb-3">
-                                        <h3 className="text-xl font-semibold text-white">{movie.title}</h3>
-                                        <div className="flex items-center bg-gray-700/50 px-2 py-1 rounded">
-                                            <FaStar className="text-yellow-400 mr-1" />
-                                            <span className="text-white">{movie.rating}</span>
-                                        </div>
+                                <p className="text-xl text-white/40 font-medium">No movies found matching your search.</p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Show Featured + All Movies only if search query is empty */}
+                    {searchQuery.trim() === "" && (
+                        <>
+                            {/* All Movies heading */}
+                            <h2 className="text-3xl font-bold mb-6 md:m-10 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
+                                All Movies
+                            </h2>
+
+                            {/* Horizontal scrolling movie list */}
+                            <div className="relative overflow-hidden">
+                                {/* Previous button */}
+                                <button
+                                    onClick={() => scroll("left")}
+                                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-3 rounded-r-lg transition-all duration-200 backdrop-blur-sm"
+                                >
+                                    <FaChevronLeft size={24} />
+                                </button>
+
+                                {/* Next button */}
+                                <button
+                                    onClick={() => scroll("right")}
+                                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-3 rounded-l-lg transition-all duration-200 backdrop-blur-sm"
+                                >
+                                    <FaChevronRight size={24} />
+                                </button>
+
+                                <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
+                                    <div className="flex space-x-6 pb-8 auto-scroll">
+                                        {featuredMovies.map((movie) => (
+                                            <div
+                                                key={movie.id}
+                                                onClick={() => router.push(`/detail/${movie.id}`)}
+                                                className="flex-none w-[300px] group bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 cursor-pointer"
+                                            >
+                                                <div className="relative">
+                                                    <img src={movie.image} alt={movie.title} className="w-full h-72 object-cover" />
+                                                    <button
+                                                        className="absolute top-4 right-4 p-2 bg-gray-900/80 rounded-full hover:bg-red-600 transition-colors duration-200"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                    >
+                                                        {movie.isFavorite ? <FaHeart className="text-red-500" /> : <FaRegHeart className="text-white" />}
+                                                    </button>
+                                                </div>
+                                                <div className="p-6">
+                                                    <div className="flex justify-between items-start mb-3">
+                                                        <h3 className="text-xl font-semibold">{movie.title}</h3>
+                                                        <div className="flex items-center bg-gray-700/50 px-2 py-1 rounded">
+                                                            <FaStar className="text-yellow-400 mr-1" />
+                                                            <span>{movie.rating}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center text-gray-400 text-sm mb-4">
+                                                        <span>{movie.year}</span>
+                                                        <span className="mx-2">•</span>
+                                                        <span>{movie.duration}</span>
+                                                        <span className="mx-2">•</span>
+                                                        <span>{movie.genre}</span>
+                                                    </div>
+                                                    <div>
+                                                        <p className={`text-white/50 text-sm leading-relaxed ${showAll ? "" : "line-clamp-2"}`}>
+                                                            {movie.description}
+                                                        </p>
+
+                                                        {movie.description.length > 100 && (
+                                                            <button
+                                                                onClick={() => setShowAll(!showAll)}
+                                                                className="mt-2 text-blue-400 hover:underline text-sm"
+                                                            >
+                                                                {showAll ? "Show less" : "Show more"}
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                    <div className="flex items-center text-gray-400 text-sm mb-4">
-                                        <span>{movie.year}</span>
-                                        <span className="mx-2">•</span>
-                                        <span>{movie.duration}</span>
-                                        <span className="mx-2">•</span>
-                                        <span>{movie.genre}</span>
-                                    </div>
-                                    <p className="text-gray-300 text-sm leading-relaxed">{movie.description}</p>
                                 </div>
                             </div>
-                        ))
-                    ) : (
-                        <div className="col-span-full flex flex-col items-center justify-center py-20">
-                            <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
-                                <FaSearch className="w-8 h-8 text-white/20" />
-                            </div>
-                            <p className="text-xl text-white/40 font-medium">No movies found matching your search.</p>
-                        </div>
+                        </>
                     )}
                 </div>
-
-
-                {/* All Movies */}
-                <h2 className="text-3xl font-bold mb-6 md:m-10 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
-                    All Movies
-                </h2>
-
-                {/* Horizontal scrolling movie list */}
-                <div className="relative overflow-hidden">
-                    {/* Previous button */}
-                    <button
-                        onClick={() => scroll('left')}
-                        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-3 rounded-r-lg transition-all duration-200 backdrop-blur-sm"
-                    >
-                        <FaChevronLeft size={24} />
-                    </button>
-
-                    {/* Next button */}
-                    <button
-                        onClick={() => scroll('right')}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-3 rounded-l-lg transition-all duration-200 backdrop-blur-sm"
-                    >
-                        <FaChevronRight size={24} />
-                    </button>
-                    <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
-                        <div className="flex space-x-6 pb-8 auto-scroll">
-                            {featuredMovies.map((movie) => (
-                                <div
-                                    key={movie.id}
-                                    onClick={() => router.push(`/detail/${movie.id}`)}
-                                    className="flex-none w-[300px] group bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 cursor-pointer"
-                                >
-                                    <div className="relative">
-                                        <img
-                                            src={movie.image}
-                                            alt={movie.title}
-                                            className="w-full h-72 object-cover"
-                                        />
-                                        <button className="absolute top-4 right-4 p-2 bg-gray-900/80 rounded-full hover:bg-red-600 transition-colors duration-200">
-                                            {movie.isFavorite ? (
-                                                <FaHeart className="text-red-500" />
-                                            ) : (
-                                                <FaRegHeart className="text-white" />
-                                            )}
-                                        </button>
-                                    </div>
-                                    <div className="p-6">
-                                        <div className="flex justify-between items-start mb-3">
-                                            <h3 className="text-xl font-semibold">{movie.title}</h3>
-                                            <div className="flex items-center bg-gray-700/50 px-2 py-1 rounded">
-                                                <FaStar className="text-yellow-400 mr-1" />
-                                                <span>{movie.rating}</span>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center text-gray-400 text-sm mb-4">
-                                            <span>{movie.year}</span>
-                                            <span className="mx-2">•</span>
-                                            <span>{movie.duration}</span>
-                                            <span className="mx-2">•</span>
-                                            <span>{movie.genre}</span>
-                                        </div>
-                                        <div>
-                                            <p className={`text-white/50 text-sm leading-relaxed ${showAll ? "" : "line-clamp-2"}`}>
-                                                {movie.description}
-                                            </p>
-
-                                            {movie.description.length > 100 && ( // only show button if description is long
-                                                <button
-                                                    onClick={() => setShowAll(!showAll)}
-                                                    className="mt-2 text-blue-400 hover:underline text-sm"
-                                                >
-                                                    {showAll ? "Show less" : "Show more"}
-                                                </button>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
 
                 {/* Categories Section */}
                 <div className="mt-16">

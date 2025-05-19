@@ -88,7 +88,9 @@ const MovieDetailComponent = () => {
                                 </div>
                                 <button className="w-full py-4 bg-red-600 hover:bg-red-700 rounded-xl flex items-center justify-center space-x-2 transition-colors">
                                     <FaPlay className="w-5 h-5" />
-                                    <span className="font-semibold">Watch Now</span>
+                                    <span className="font-semibold"
+                                        onClick={() => router.push(`/detail/${movie.id}/payment`)}
+                                    >Watch Now</span>
                                 </button>
                                 <button className="w-full py-4 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center space-x-2 transition-colors border border-white/10">
                                     <FaTicketAlt className="w-5 h-5" />
