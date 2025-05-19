@@ -9,14 +9,15 @@ import { FaArrowLeft, FaStar } from 'react-icons/fa';
 const WatchPage = () => {
     const router = useRouter();
     const params = useParams();
+
     const id = params?.id as string;
     const movieId = Number(id);
-
-    const movie: Movie | undefined = featuredMovies.find((m) => m.id === movieId);
 
     const [rating, setRating] = useState<number>(0);
     const [hoverRating, setHoverRating] = useState<number>(0);
     const [isWatching, setIsWatching] = useState(false);
+
+    const movie: Movie | undefined = featuredMovies.find((m) => m.id === movieId);
 
     if (!movie) {
         return <div className="text-white p-10">Movie not found.</div>;
