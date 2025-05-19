@@ -90,6 +90,8 @@ const Page = () => {
                                     border border-white/10 hover:border-white/20 cursor-pointer">
                                     <div className="relative">
                                         <img
+                                            width={30}
+                                            height={30}
                                             src={movie.image}
                                             alt={movie.title}
                                             className="w-full h-[300px] object-cover brightness-90 group-hover:brightness-100 transition-all duration-300"

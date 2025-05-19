@@ -1,5 +1,5 @@
 'use client'
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaArrowLeft, FaCalendar, FaClock, FaTicketAlt } from 'react-icons/fa';
 // Mock data for available times
@@ -13,12 +13,7 @@ const AVAILABLE_TIMES = [
 
 const TICKET_PRICE = 5; // Base price per ticket
 export default function BookingPage() {
-    const params = useParams();
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const movieId = searchParams.get('movieId');
-    const movieTitle = searchParams.get('title');
-
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -117,7 +112,6 @@ export default function BookingPage() {
 
                 <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10">
                     <h1 className="text-3xl font-bold mb-2 text-center">Book Movie Tickets</h1>
-                    {/* <p className="text-white/60 text-center mb-8">{decodeURIComponent(movieTitle)}</p> */}
 
                     {/* Progress Steps */}
                     <div className="flex items-center justify-center mb-12">

@@ -1,46 +1,30 @@
 'use client';
+
 import { featuredMovies } from '@/data/ActionData';
 import { Movie } from '@/types/Movie';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FaArrowLeft, FaStar } from 'react-icons/fa';
 
 const WatchPage = () => {
     const router = useRouter();
-    const [, setMovie] = useState<Movie | null>(null);
-    const [rating, setRating] = useState<number>(0);
-    const [hoverRating, setHoverRating] = useState<number>(0);
-    const [isWatching, setIsWatching] = useState(false);
     const params = useParams();
     const id = params?.id as string;
-
     const movieId = Number(id);
 
     const movie: Movie | undefined = featuredMovies.find((m) => m.id === movieId);
+
+    const [rating, setRating] = useState<number>(0);
+    const [hoverRating, setHoverRating] = useState<number>(0);
+    const [isWatching, setIsWatching] = useState(false);
 
     if (!movie) {
         return <div className="text-white p-10">Movie not found.</div>;
     }
 
-    console.log(movie);
-
-    useEffect(() => {
-        if (movieId) {
-            const foundMovie = featuredMovies.find(m => String(m.id) === String(movieId));
-            if (foundMovie) {
-                setMovie(foundMovie);
-            } else {
-                router.push('/movies');
-            }
-        }
-    }, [movieId, router]);
-
     const handleRatingSubmit = () => {
-        // Here you would typically save the rating to your backend
         alert('Thank you for rating the movie!');
     };
-
-    // if (!movie) return null;
 
     return (
         <div className="min-h-screen bg-black text-white">
@@ -58,7 +42,6 @@ const WatchPage = () => {
                     </div>
                 ) : (
                     <div className="absolute inset-0">
-                        {/* Replace this with your actual video player component */}
                         <div className="w-full h-full bg-gray-800 flex items-center justify-center">
                             <p className="text-white/60">Video Player Placeholder</p>
                         </div>
