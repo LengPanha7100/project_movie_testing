@@ -1,14 +1,12 @@
 'use client';
 import { featuredMovies } from '@/data/ActionData';
 import { Movie } from '@/types/Movie';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaArrowLeft, FaStar } from 'react-icons/fa';
 
 const PaymentPage = () => {
     const router = useRouter();
-    const searchParams = useSearchParams();
-
     const [rating, setRating] = useState<number>(0);
     const [hoverRating, setHoverRating] = useState<number>(0);
     const [paymentMethod, setPaymentMethod] = useState<string>('credit');
@@ -25,17 +23,6 @@ const PaymentPage = () => {
     }
 
     console.log(movie);
-
-    // useEffect(() => {
-    //     if (movieId) {
-    //         const foundMovie = featuredMovies.find(m => String(m.id) === String(movieId));
-    //         if (foundMovie) {
-    //             setMovie(foundMovie);
-    //         } else {
-    //             router.push('/movies');
-    //         }
-    //     }
-    // }, [movieId, router]);
 
     const handlePayment = async (e: React.FormEvent) => {
         e.preventDefault();

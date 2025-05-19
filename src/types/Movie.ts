@@ -11,9 +11,21 @@ export interface Movie {
   isFavorite: boolean;
   cast?: string[];
   director?: string;
+  hasPayment?: boolean;
+  price?: number;
 }
 export interface Category {
   name: string;
   type: string;
   count: number;
+}
+
+export interface UserMovieStatus {
+  movieId: number;
+  userId: number;
+  hasPaid: boolean;
+  hasWatched: boolean;
+  userRating?: number;
+  watchProgress?: number;
+  watchedAt?: Date;
 }

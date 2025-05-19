@@ -1,14 +1,13 @@
 'use client';
 import { featuredMovies } from '@/data/ActionData';
 import { Movie } from '@/types/Movie';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FaArrowLeft, FaStar } from 'react-icons/fa';
 
 const WatchPage = () => {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const [movie1, setMovie] = useState<any>(null);
+    const [, setMovie] = useState<any>(null);
     const [rating, setRating] = useState<number>(0);
     const [hoverRating, setHoverRating] = useState<number>(0);
     const [isWatching, setIsWatching] = useState(false);
