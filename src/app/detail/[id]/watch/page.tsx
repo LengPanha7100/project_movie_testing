@@ -7,7 +7,7 @@ import { FaArrowLeft, FaStar } from 'react-icons/fa';
 
 const WatchPage = () => {
     const router = useRouter();
-    const [, setMovie] = useState<any>(null);
+    const [, setMovie] = useState<Movie | null>(null);
     const [rating, setRating] = useState<number>(0);
     const [hoverRating, setHoverRating] = useState<number>(0);
     const [isWatching, setIsWatching] = useState(false);
