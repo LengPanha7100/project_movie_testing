@@ -9,6 +9,8 @@ export interface Movie {
   description: string;
   image: string;
   isFavorite: boolean;
+  cast?: string[];
+  director?: string;
 }
 export interface Category {
   name: string;

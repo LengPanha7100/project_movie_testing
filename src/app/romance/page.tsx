@@ -11,6 +11,7 @@ const Page = () => {
         movie.type === "romance" &&
         movie.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
+    const [showAll, setShowAll] = useState(false);
 
     console.log(filterDataMovie)
     return (
@@ -83,9 +84,10 @@ const Page = () => {
                         {filterDataMovie.length > 0 ? (
                             filterDataMovie.map((movie: Movie) => (
                                 <div key={movie.id}
+                                    onClick={() => router.push(`/detail/${movie.id}`)}
                                     className="group bg-white/5 backdrop-blur-xl rounded-3xl overflow-hidden 
                                     hover:transform hover:scale-[1.02] transition-all duration-300
-                                    border border-white/10 hover:border-white/20">
+                                    border border-white/10 hover:border-white/20 cursor-pointer">
                                     <div className="relative">
                                         <img
                                             src={movie.image}
@@ -117,9 +119,22 @@ const Page = () => {
                                             <span className="mx-2">•</span>
                                             <span>{movie.duration}</span>
                                             <span className="mx-2">•</span>
-                                            <span className="text-red-400/90">{movie.genre}</span>
+                                            <span>{movie.genre}</span>
                                         </div>
-                                        <p className="text-white/50 text-sm leading-relaxed line-clamp-3">{movie.description}</p>
+                                        <div>
+                                            <p className={`text-white/50 text-sm leading-relaxed ${showAll ? "" : "line-clamp-2"}`}>
+                                                {movie.description}
+                                            </p>
+
+                                            {movie.description.length > 100 && ( // only show button if description is long
+                                                <button
+                                                    onClick={() => setShowAll(!showAll)}
+                                                    className="mt-2 text-blue-400 hover:underline text-sm"
+                                                >
+                                                    {showAll ? "Show less" : "Show more"}
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             ))

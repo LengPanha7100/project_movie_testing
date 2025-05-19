@@ -20,6 +20,7 @@ export default function FavoritesPage() {
     const handleBackClick = () => {
         router.push('/');
     };
+    const [showAll, setShowAll] = useState(false);
 
     return (
         <main className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white overflow-y-auto pb-20">
@@ -55,9 +56,10 @@ export default function FavoritesPage() {
                         .map((movie) => (
                             <div
                                 key={movie.id}
+                                onClick={() => router.push(`/detail/${movie.id}`)}
                                 className="group bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden 
                                          hover:transform hover:scale-[1.02] transition-all duration-300
-                                         border border-gray-700/50 hover:border-purple-500/50"
+                                         border border-gray-700/50 hover:border-purple-500/50 cursor-pointer"
                             >
                                 <div className="relative">
                                     <img
@@ -85,7 +87,7 @@ export default function FavoritesPage() {
 
                                 <div className="p-6">
                                     <div className="flex justify-between items-start mb-3">
-                                        <h3 className="text-xl font-semibold text-white group-hover:text-purple-300 transition-colors duration-300">
+                                        <h3 className="text-xl font-semibold text-white group-hover:text-purple-300 line-clamp-1 transition-colors duration-300">
                                             {movie.title}
                                         </h3>
                                         <div className="flex items-center bg-gray-700/50 px-2 py-1 rounded">
@@ -102,9 +104,20 @@ export default function FavoritesPage() {
                                         <span>{movie.genre}</span>
                                     </div>
 
-                                    <p className="text-gray-300 text-sm leading-relaxed line-clamp-3 group-hover:text-gray-200">
-                                        {movie.description}
-                                    </p>
+                                    <div>
+                                        <p className={`text-white/50 text-sm leading-relaxed ${showAll ? "" : "line-clamp-2"}`}>
+                                            {movie.description}
+                                        </p>
+
+                                        {movie.description.length > 100 && ( // only show button if description is long
+                                            <button
+                                                onClick={() => setShowAll(!showAll)}
+                                                className="mt-2 text-blue-400 hover:underline text-sm"
+                                            >
+                                                {showAll ? "Show less" : "Show more"}
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         ))}

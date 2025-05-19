@@ -31,7 +31,7 @@ export default function Home() {
     const filteredMovies = featuredMovie.filter(movie =>
         movie.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
-
+    const [showAll, setShowAll] = useState(false);
 
 
     return (
@@ -101,7 +101,8 @@ export default function Home() {
                         filteredMovies.map((movie) => (
                             <div
                                 key={movie.id}
-                                className="group bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300"
+                                onClick={() => router.push(`/detail/${movie.id}`)}
+                                className="group bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 cursor-pointer"
                             >
                                 <div className="relative">
                                     <img
@@ -174,7 +175,8 @@ export default function Home() {
                             {featuredMovies.map((movie) => (
                                 <div
                                     key={movie.id}
-                                    className="flex-none w-[300px] group bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300"
+                                    onClick={() => router.push(`/detail/${movie.id}`)}
+                                    className="flex-none w-[300px] group bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 cursor-pointer"
                                 >
                                     <div className="relative">
                                         <img
@@ -205,7 +207,20 @@ export default function Home() {
                                             <span className="mx-2">•</span>
                                             <span>{movie.genre}</span>
                                         </div>
-                                        <p className="text-gray-300 text-sm leading-relaxed line-clamp-3">{movie.description}</p>
+                                        <div>
+                                            <p className={`text-white/50 text-sm leading-relaxed ${showAll ? "" : "line-clamp-2"}`}>
+                                                {movie.description}
+                                            </p>
+
+                                            {movie.description.length > 100 && ( // only show button if description is long
+                                                <button
+                                                    onClick={() => setShowAll(!showAll)}
+                                                    className="mt-2 text-blue-400 hover:underline text-sm"
+                                                >
+                                                    {showAll ? "Show less" : "Show more"}
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             ))}

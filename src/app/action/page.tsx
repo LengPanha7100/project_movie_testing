@@ -11,6 +11,7 @@ const Page = () => {
         movie.type === "action" &&
         movie.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
+    const [showAll, setShowAll] = useState(false);
 
     console.log(filterDataMovie)
     return (
@@ -83,9 +84,10 @@ const Page = () => {
                         {filterDataMovie.length > 0 ? (
                             filterDataMovie.map((movie: Movie) => (
                                 <div key={movie.id}
+                                    onClick={() => router.push(`/detail/${movie.id}`)}
                                     className="group bg-white/5 backdrop-blur-xl rounded-3xl overflow-hidden 
                                     hover:transform hover:scale-[1.02] transition-all duration-300
-                                    border border-white/10 hover:border-white/20">
+                                    border border-white/10 hover:border-white/20 cursor-pointer">
                                     <div className="relative">
                                         <img
                                             src={movie.image}
@@ -106,7 +108,7 @@ const Page = () => {
                                     </div>
                                     <div className="p-6">
                                         <div className="flex justify-between items-start mb-4">
-                                            <h3 className="text-xl font-bold text-white/90 leading-tight">{movie.title}</h3>
+                                            <h3 className="text-xl font-bold text-white/90 leading-tight line-clamp-1">{movie.title}</h3>
                                             <div className="flex items-center bg-white/10 px-3 py-1.5 rounded-lg backdrop-blur-xl">
                                                 <FaStar className="text-yellow-400 mr-1.5 w-4 h-4" />
                                                 <span className="font-medium text-white/90">{movie.rating}</span>
@@ -117,9 +119,22 @@ const Page = () => {
                                             <span className="mx-2">•</span>
                                             <span>{movie.duration}</span>
                                             <span className="mx-2">•</span>
-                                            <span className="text-red-400/90">{movie.genre}</span>
+                                            <span>{movie.genre}</span>
                                         </div>
-                                        <p className="text-white/50 text-sm leading-relaxed line-clamp-3">{movie.description}</p>
+                                        <div>
+                                            <p className={`text-white/50 text-sm leading-relaxed ${showAll ? "" : "line-clamp-2"}`}>
+                                                {movie.description}
+                                            </p>
+
+                                            {movie.description.length > 100 && ( // only show button if description is long
+                                                <button
+                                                    onClick={() => setShowAll(!showAll)}
+                                                    className="mt-2 text-blue-400 hover:underline text-sm"
+                                                >
+                                                    {showAll ? "Show less" : "Show more"}
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             ))
