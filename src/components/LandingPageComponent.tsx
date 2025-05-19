@@ -224,7 +224,11 @@ export default function Home() {
 
                                                         {movie.description.length > 100 && (
                                                             <button
-                                                                onClick={() => setShowAll(!showAll)}
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    setShowAll(!showAll)
+                                                                }
+                                                                }
                                                                 className="mt-2 text-blue-400 hover:underline text-sm"
                                                             >
                                                                 {showAll ? "Show less" : "Show more"}
