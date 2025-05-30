@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaArrowLeft, FaCalendar, FaClock, FaTicketAlt } from 'react-icons/fa';
+import { MdEventSeat } from "react-icons/md";
 
 const AVAILABLE_TIMES = [
     { id: 1, time: "10:00 AM", available: true },
@@ -91,7 +92,7 @@ export default function BookingPage() {
                                         ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/20'}
                                         transition-all duration-200`}
                                 >
-                                    {seatNumber}
+                                    {isSelected ? <MdEventSeat className="w-5 h-5" /> : seatNumber}
                                 </button>
                             );
                         })}
@@ -170,7 +171,7 @@ export default function BookingPage() {
                                 <label className="block text-sm font-medium text-white/80 mb-4">
                                     Number of Tickets
                                 </label>
-                                <select
+                                {/* <select
                                     name="numberOfTickets"
                                     value={formData.numberOfTickets}
                                     onChange={handleInputChange}
@@ -187,7 +188,20 @@ export default function BookingPage() {
                                             {num} {num === 1 ? 'Ticket' : 'Tickets'}
                                         </option>
                                     ))}
-                                </select>
+                                </select> */}
+                                <Select
+                                    isRequired
+                                    label="Country"
+                                    labelPlacement="outside"
+                                    name="country"
+                                    placeholder="Select country"
+                                >
+                                    <SelectItem key="ar">Argentina</SelectItem>
+                                    <SelectItem key="us">United States</SelectItem>
+                                    <SelectItem key="ca">Canada</SelectItem>
+                                    <SelectItem key="uk">United Kingdom</SelectItem>
+                                    <SelectItem key="au">Australia</SelectItem>
+                                </Select>
                             </div>
 
                             <button

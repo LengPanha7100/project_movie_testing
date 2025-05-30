@@ -56,7 +56,6 @@ export default function FavoritesPage() {
                         .map((movie) => (
                             <div
                                 key={movie.id}
-                                onClick={() => router.push(`/detail/${movie.id}`)}
                                 className="group bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden 
                                          hover:transform hover:scale-[1.02] transition-all duration-300
                                          border border-gray-700/50 hover:border-purple-500/50 cursor-pointer"
@@ -65,6 +64,7 @@ export default function FavoritesPage() {
                                     <img
                                         src={movie.image}
                                         alt={movie.title}
+                                        onClick={() => router.push(`/detail/${movie.id}`)}
                                         className="w-full h-72 object-cover brightness-90 group-hover:brightness-100 transition-all duration-300"
                                     />
                                     {/* Gradient Overlay */}

@@ -84,7 +84,6 @@ const Page = () => {
                         {filterDataMovie.length > 0 ? (
                             filterDataMovie.map((movie: Movie) => (
                                 <div key={movie.id}
-                                    onClick={() => router.push(`/detail/${movie.id}`)}
                                     className="group bg-white/5 backdrop-blur-xl rounded-3xl overflow-hidden 
                                     hover:transform hover:scale-[1.02] transition-all duration-300
                                     border border-white/10 hover:border-white/20 cursor-pointer">
@@ -92,6 +91,7 @@ const Page = () => {
                                         <img
                                             src={movie.image}
                                             alt={movie.title}
+                                            onClick={() => router.push(`/detail/${movie.id}`)}
                                             className="w-full h-[300px] object-cover brightness-90 group-hover:brightness-100 transition-all duration-300"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
