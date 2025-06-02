@@ -1,8 +1,9 @@
 'use client';
 
-import { featuredMovies } from "@/data/ActionData";
+import { MovieService } from "@/service/MovieService";
+import { Movie } from "@/types/Movie";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowLeft, FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 
 export default function FavoritesPage() {
@@ -21,6 +22,23 @@ export default function FavoritesPage() {
         router.push('/');
     };
     const [showAll, setShowAll] = useState(false);
+    const [movieData, setMovieData] = useState<Movie[]>([]);
+
+    const dataMovie = async () => {
+        try {
+            const responseMovie = await MovieService.getMovieAll();
+            console.log(responseMovie.payload);
+            if (responseMovie && responseMovie.payload) {
+                setMovieData(responseMovie.payload)
+            }
+        } catch (error) {
+            console.error("Error fetching movies:", error);
+        }
+    }
+
+    useEffect(() => {
+        dataMovie();
+    }, []);
 
     return (
         <main className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white overflow-y-auto pb-20">
@@ -51,20 +69,20 @@ export default function FavoritesPage() {
             {/* Movies Grid Section */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 mt-10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                    {featuredMovies
+                    {movieData
                         .filter((movie) => movie?.isFavorite)
                         .map((movie) => (
                             <div
-                                key={movie.id}
+                                key={movie.movieId}
                                 className="group bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden 
                                          hover:transform hover:scale-[1.02] transition-all duration-300
                                          border border-gray-700/50 hover:border-purple-500/50 cursor-pointer"
                             >
                                 <div className="relative">
                                     <img
-                                        src={movie.image}
+                                        src={movie.poster}
                                         alt={movie.title}
-                                        onClick={() => router.push(`/detail/${movie.id}`)}
+                                        onClick={() => router.push(`/detail/${movie.movieId}`)}
                                         className="w-full h-72 object-cover brightness-90 group-hover:brightness-100 transition-all duration-300"
                                     />
                                     {/* Gradient Overlay */}
@@ -72,7 +90,7 @@ export default function FavoritesPage() {
 
                                     {/* Favorite Button */}
                                     <button
-                                        onClick={() => toggleFavorite(movie.id)}
+                                        onClick={() => toggleFavorite(movie.movieId)}
                                         className="absolute top-4 right-4 p-3 bg-gray-900/80 rounded-full
                                                  hover:bg-purple-600/80 transition-all duration-300
                                                  transform hover:scale-110"
@@ -101,15 +119,15 @@ export default function FavoritesPage() {
                                         <span className="mx-2">•</span>
                                         <span>{movie.duration}</span>
                                         <span className="mx-2">•</span>
-                                        <span>{movie.genre}</span>
+                                        {/* <span>{movie.genre}</span> */}
                                     </div>
 
                                     <div>
                                         <p className={`text-white/50 text-sm leading-relaxed ${showAll ? "" : "line-clamp-2"}`}>
-                                            {movie.description}
+                                            {movie.overview}
                                         </p>
 
-                                        {movie.description.length > 100 && ( // only show button if description is long
+                                        {movie.overview.length > 100 && ( // only show button if description is long
                                             <button
                                                 onClick={() => setShowAll(!showAll)}
                                                 className="mt-2 text-blue-400 hover:underline text-sm"
@@ -124,7 +142,7 @@ export default function FavoritesPage() {
                 </div>
 
                 {/* Empty State */}
-                {featuredMovies.filter(movie => movie.isFavorite).length === 0 && (
+                {movieData.filter(movie => movie.isFavorite).length === 0 && (
                     <div className="text-center py-20">
                         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-800/50 mb-6">
                             <FaHeart className="w-8 h-8 text-gray-400" />

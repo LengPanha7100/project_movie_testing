@@ -16,7 +16,6 @@
 //     isFavorite: false,
 //   },
 //   {
-//     id: 2,
 //     title: "Midnight Mystery",
 //     genre: "Thriller",
 //     type: "action",

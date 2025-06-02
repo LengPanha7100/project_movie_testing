@@ -1,14 +1,31 @@
 'use client'
-import { featuredMovies } from "@/data/ActionData";
+import { MovieService } from "@/service/MovieService";
 import { Movie } from "@/types/Movie";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaFilter, FaHeart, FaRegHeart, FaSearch, FaStar } from "react-icons/fa";
 const Page = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const router = useRouter();
-    const filterDataMovie = featuredMovies.filter((movie) =>
-        movie.type === "action" &&
+    const [movieData, setMovieData] = useState<Movie[]>([]);
+
+    const dataMovie = async () => {
+        try {
+            const responseMovie = await MovieService.getMovieAll();
+            console.log(responseMovie.payload);
+            if (responseMovie && responseMovie.payload) {
+                setMovieData(responseMovie.payload)
+            }
+        } catch (error) {
+            console.error("Error fetching movies:", error);
+        }
+    }
+
+    useEffect(() => {
+        dataMovie();
+    }, []);
+    const filterDataMovie = movieData.filter((movie) =>
+        movie. === "action" &&
         movie.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
     const [showAll, setShowAll] = useState(false);
