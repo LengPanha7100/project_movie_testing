@@ -1,0 +1,8 @@
+const Path = {
+  movie: {
+    list: (page: number, size: number) =>
+      `http://34.87.39.167:9082/api/v1/movies?page=${page}&size=${size}`,
+  },
+};
+
+export default Path;

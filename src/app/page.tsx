@@ -5,7 +5,7 @@ import { MovieService } from "@/service/MovieService";
 
 export default async function Home() {
 
-  const responseMovieAll = await MovieService.getAllMovie();
+  const responseMovieAll = await MovieService.getMovieAll();
   console.log("123", responseMovieAll);
 
   return (
