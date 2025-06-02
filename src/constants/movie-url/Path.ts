@@ -13,6 +13,12 @@ const Path = {
       return `http://34.87.39.167:9082/api/v1/categories?page=${page}&size=${size}`;
     },
   },
+
+  cast: {
+    list: (page: number, size: number): string => {
+      return `http://34.87.39.167:9082/api/v1/cast-members?page=${page}&size=${size}`;
+    },
+  },
 };
 
 export default Path;

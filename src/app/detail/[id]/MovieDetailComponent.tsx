@@ -1,7 +1,9 @@
 'use client'
-import { featuredMovies } from "@/data/ActionData";
-import { Movie } from "@/types/Movie";
+import { MovieService } from "@/service/MovieService";
+// import { featuredMovies } from "@/data/ActionData";
+import { CastMember, Movie } from "@/types/Movie";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { FaArrowLeft, FaClock, FaHeart, FaPlay, FaRegHeart, FaStar, FaTicketAlt, FaUser } from "react-icons/fa";
 
 const MovieDetailComponent = () => {
@@ -9,7 +11,25 @@ const MovieDetailComponent = () => {
     const id = params?.id as string;
 
     const movieId = Number(id);
-    const movie: Movie | undefined = featuredMovies.find((m) => m.id === movieId);
+    const [movieData, setMovieData] = useState<Movie[]>([]);
+    const [castData, setCast] = useState<CastMember[]>([])
+
+    const dataMovie = async () => {
+        try {
+            const responseMovie = await MovieService.getMovieAll();
+            console.log(responseMovie.payload);
+            if (responseMovie && responseMovie.payload) {
+                setMovieData(responseMovie.payload)
+            }
+        } catch (error) {
+            console.error("Error fetching movies:", error);
+        }
+    }
+
+    useEffect(() => {
+        dataMovie();
+    }, []);
+    const movie: Movie | undefined = movieData.find((m) => m.movieId === movieId);
 
     if (!movie) {
         return <div className="text-white p-10">Movie not found.</div>;
@@ -17,6 +37,22 @@ const MovieDetailComponent = () => {
 
     console.log(movie);
     const router = useRouter();
+
+    const responseCast = async () => {
+        try {
+            const data = await MovieService.getAllCast();
+            console.log("cast", data);
+            if (data && data.payload) {
+                setCast(data.payload);
+            }
+        } catch (error) {
+            console.log("error", error)
+        }
+    }
+
+    useEffect(() => {
+        responseCast();
+    }, [])
 
 
 
@@ -29,7 +65,7 @@ const MovieDetailComponent = () => {
             <div className="relative h-[80vh] w-full">
                 <div className="absolute inset-0">
                     <img
-                        src={movie.image}
+                        src={movie.poster}
                         alt={movie.title}
                         className="w-full h-full object-cover"
                     />
@@ -71,7 +107,7 @@ const MovieDetailComponent = () => {
                     <div className="lg:col-span-1">
                         <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-white/5 backdrop-blur-xl border border-white/10">
                             <img
-                                src={movie.image}
+                                src={movie.poster}
                                 alt={movie.title}
                                 className="w-full h-[500px] object-cover"
                             />
@@ -89,13 +125,13 @@ const MovieDetailComponent = () => {
                                 <button className="w-full py-4 bg-red-600 hover:bg-red-700 rounded-xl flex items-center justify-center space-x-2 transition-colors">
                                     <FaPlay className="w-5 h-5" />
                                     <span className="font-semibold"
-                                        onClick={() => router.push(`/detail/${movie.id}/payment`)}
+                                        onClick={() => router.push(`/detail/${movie.movieId}/payment`)}
                                     >Watch Now</span>
                                 </button>
                                 <button className="w-full py-4 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center space-x-2 transition-colors border border-white/10">
                                     <FaTicketAlt className="w-5 h-5" />
                                     <span className="font-semibold"
-                                        onClick={() => router.push(`/detail/${movie.id}/booking`)}
+                                        onClick={() => router.push(`/detail/${movie.movieId}/booking`)}
                                     >Book Tickets</span>
                                 </button>
                             </div>
@@ -109,8 +145,8 @@ const MovieDetailComponent = () => {
                             <div className="flex flex-wrap items-center gap-4 text-lg text-white/80 mb-8">
                                 <span className="px-4 py-1.5 bg-white/5 rounded-full">{movie.year}</span>
                                 <span className="text-white/40">•</span>
-                                <span className="px-4 py-1.5 bg-white/5 rounded-full">{movie.genre}</span>
-                                <span className="text-white/40">•</span>
+                                {/* <span className="px-4 py-1.5 bg-white/5 rounded-full">{movie.genre}</span> */}
+                                {/* <span className="text-white/40">•</span> */}
                                 <span className="px-4 py-1.5 bg-white/5 rounded-full">{movie.duration}</span>
                             </div>
                         </div>
@@ -119,15 +155,15 @@ const MovieDetailComponent = () => {
                             <div>
                                 <h2 className="text-2xl font-semibold mb-4">Overview</h2>
                                 <p className="text-white/70 leading-relaxed text-lg">
-                                    {movie.description}
+                                    {movie.overview}
                                 </p>
                             </div>
 
-                            {movie.cast && movie.cast.length > 0 && (
+                            {castData && castData.length > 0 && (
                                 <div>
                                     <h2 className="text-2xl font-semibold mb-4">Cast</h2>
                                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                        {movie.cast.map((actor, index) => (
+                                        {castData.map((actor, index) => (
                                             <div key={index}
                                                 className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 border border-white/10
                                                 hover:bg-white/10 transition-colors">
@@ -135,7 +171,7 @@ const MovieDetailComponent = () => {
                                                     <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
                                                         <FaUser className="w-5 h-5 text-white/60" />
                                                     </div>
-                                                    <p className="text-white/90 font-medium">{actor}</p>
+                                                    {/* <p className="text-white/90 font-medium">{name}</p> */}
                                                 </div>
                                             </div>
                                         ))}
@@ -143,7 +179,7 @@ const MovieDetailComponent = () => {
                                 </div>
                             )}
 
-                            {movie.director && (
+                            {/* {movie.director && (
                                 <div>
                                     <h2 className="text-2xl font-semibold mb-4">Director</h2>
                                     <div className="inline-flex items-center space-x-3 bg-white/5 backdrop-blur-xl rounded-2xl p-4 border border-white/10">
@@ -153,7 +189,7 @@ const MovieDetailComponent = () => {
                                         <p className="text-white/90 font-medium">{movie.director}</p>
                                     </div>
                                 </div>
-                            )}
+                            )} */}
                         </div>
                     </div>
                 </div>

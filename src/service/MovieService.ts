@@ -1,5 +1,5 @@
 import Path from "@/constants/movie-url/Path";
-import { CategoryResponse, MovieResponse } from "@/types/Movie";
+import { CastResponse, CategoryResponse, MovieResponse } from "@/types/Movie";
 import { RestService } from "./RestService";
 
 export const MovieService = {
@@ -20,5 +20,9 @@ export const MovieService = {
     return await RestService.get<MovieResponse>(
       Path.movie.categoryByName(categoryName, page, size)
     );
+  },
+
+  getAllCast: async (): Promise<CastResponse> => {
+    return await RestService.get<CastResponse>(Path.cast.list(1, 1000000));
   },
 };

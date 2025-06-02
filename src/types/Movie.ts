@@ -38,3 +38,12 @@ export interface CategoryResponse {
   status?: string;
   message?: string;
 }
+
+export interface CastMember {
+  castId: number;
+  name: string;
+}
+
+export interface CastResponse {
+  payload: CastMember[];
+}
