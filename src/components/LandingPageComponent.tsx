@@ -1,6 +1,5 @@
 'use client';
-import { categories } from '@/data/CategoriesData';
-import { Movie } from '@/types/Movie';
+import { CategoryResponse, Movie, MovieResponse } from '@/types/Movie';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import {
@@ -16,14 +15,15 @@ import {
 } from 'react-icons/fa';
 
 interface LandingPageProps {
-    responseMovieAll: Movie[];
+    responseMovieAll: MovieResponse;
+    responseCategory: CategoryResponse
 }
 
 
 
 
 
-const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll }) => {
+const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, responseCategory }) => {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [showAll, setShowAll] = useState<boolean>(false);
     const router = useRouter();
@@ -48,7 +48,7 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll }) 
     };
 
 
-    const filteredMovies = responseMovieAll?.filter((movie) =>
+    const filteredMovies = responseMovieAll?.payload?.filter((movie) =>
         movie?.title?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -206,7 +206,7 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll }) 
 
                                 <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
                                     <div className="flex space-x-6 pb-8 auto-scroll">
-                                        {responseMovieAll?.map((movie) => (
+                                        {responseMovieAll?.payload?.map((movie) => (
                                             <div
                                                 key={movie.movieId}
                                                 onClick={() => router.push(`/detail/${movie.movieId}`)}
@@ -270,7 +270,7 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll }) 
                         Categories
                     </h2>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                        {categories.map((category) => (
+                        {responseCategory.payload.map((category) => (
                             <div
                                 key={category.name}
                                 onClick={() => { handleCategoryClick(category.name) }}
