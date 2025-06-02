@@ -1,18 +1,34 @@
 'use client';
-import { featuredMovies } from '@/data/ActionData';
-import { featuredMovie } from '@/data/ActionData1';
 import { categories } from '@/data/CategoriesData';
-import { Movie } from '@/types/Movie';
+import { Category, Movie } from '@/types/Movie';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useRef, useState } from 'react';
-import { FaChevronLeft, FaChevronRight, FaFilter, FaHeart, FaPlay, FaRegHeart, FaSearch, FaStar, FaTicketAlt } from 'react-icons/fa';
+import React, { useRef, useState } from 'react';
+import {
+    FaChevronLeft,
+    FaChevronRight,
+    FaFilter,
+    FaHeart,
+    FaPlay,
+    FaRegHeart,
+    FaSearch,
+    FaStar,
+    FaTicketAlt,
+} from 'react-icons/fa';
+
+// ✅ Define props interface
+interface LandingPageProps {
+    data: Movie[];
+    category: Category[];
+}
 
 
 
-export default function Home() {
+
+
+const LandingPageComponent: React.FC<LandingPageProps> = ({ data, category }) => {
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [showAll, setShowAll] = useState<boolean>(false);
     const router = useRouter();
-
     const searchParams = useSearchParams();
     const bookingCountParam = searchParams.get('bookingCount');
     const bookingCount = bookingCountParam ? Number(bookingCountParam) : 0;
@@ -23,28 +39,32 @@ export default function Home() {
     };
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const scroll = (direction: "left" | "right") => {
+    const scroll = (direction: 'left' | 'right') => {
         if (scrollContainerRef.current) {
             const scrollAmount = 300;
-            const container = scrollContainerRef.current;
-            const scrollLeft = direction === 'left' ? -scrollAmount : scrollAmount;
-            container.scrollBy({ left: scrollLeft, behavior: 'smooth' });
+            scrollContainerRef.current.scrollBy({
+                left: direction === 'left' ? -scrollAmount : scrollAmount,
+                behavior: 'smooth',
+            });
         }
     };
 
-    const filteredMovies = featuredMovie.filter(movie =>
+
+    const filteredMovies = data?.filter((movie) =>
         movie.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    const [showAll, setShowAll] = useState(false);
 
-    const MovieCard = ({ movie }: { movie: Movie }) => (
+    const MovieCard: React.FC<{ movie: Movie }> = ({ movie }) => (
         <div
-            onClick={() => router.push(`/detail/${movie.id}`)}
+            onClick={() => router.push(`/detail/${movie.movieId}`)}
             className="group bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 cursor-pointer"
         >
             <div className="relative">
-                <img src={movie.image} alt={movie.title} className="w-full h-72 object-cover" />
-                <button className="absolute top-4 right-4 p-2 bg-gray-900/80 rounded-full hover:bg-red-600 transition-colors duration-200" onClick={e => e.stopPropagation()}>
+                <img src={movie.poster} alt={movie.title} className="w-full h-72 object-cover" />
+                <button
+                    className="absolute top-4 right-4 p-2 bg-gray-900/80 rounded-full hover:bg-red-600 transition-colors duration-200"
+                    onClick={(e) => e.stopPropagation()}
+                >
                     {movie.isFavorite ? <FaHeart className="text-red-500" /> : <FaRegHeart className="text-white" />}
                 </button>
             </div>
@@ -61,15 +81,14 @@ export default function Home() {
                     <span className="mx-2">•</span>
                     <span>{movie.duration}</span>
                     <span className="mx-2">•</span>
-                    <span>{movie.genre}</span>
+                    {/* <span>{movie.genre}</span> */}
                 </div>
-                <p className="text-gray-300 text-sm leading-relaxed">{movie.description}</p>
+                <p className="text-gray-300 text-sm leading-relaxed">{movie.overview}</p>
             </div>
         </div>
     );
 
-
-
+    console.log(category);
     return (
         <main className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
             {/* Hero Section */}
@@ -137,16 +156,18 @@ export default function Home() {
 
                 {/* Movie Grid */}
                 <div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
                         {searchQuery.trim() === "" ? (
                             // No search query — show all movies or filteredMovies as default
-                            filteredMovies.map((movie) => (
-                                <MovieCard key={movie.id} movie={movie} />
-                            ))
-                        ) : filteredMovies.length > 0 ? (
+                            filteredMovies
+                                ?.filter((movie) => movie?.rating > 9)
+                                .map((movie) => (
+                                    <MovieCard key={movie?.movieId} movie={movie} />
+                                ))
+                        ) : filteredMovies?.length > 0 ? (
                             // Search query present & has results
-                            filteredMovies.map((movie) => (
-                                <MovieCard key={movie.id} movie={movie} />
+                            filteredMovies?.map((movie) => (
+                                <MovieCard key={movie?.movieId} movie={movie} />
                             ))
                         ) : (
                             // Search query present but no results
@@ -172,7 +193,7 @@ export default function Home() {
                                 {/* Previous button */}
                                 <button
                                     onClick={() => scroll("left")}
-                                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-3 rounded-r-lg transition-all duration-200 backdrop-blur-sm"
+                                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-3 rounded-r-lg transition-all duration-200 backdrop-blur-sm cursor-pointer"
                                 >
                                     <FaChevronLeft size={24} />
                                 </button>
@@ -180,21 +201,21 @@ export default function Home() {
                                 {/* Next button */}
                                 <button
                                     onClick={() => scroll("right")}
-                                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-3 rounded-l-lg transition-all duration-200 backdrop-blur-sm"
+                                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-3 rounded-l-lg transition-all duration-200 backdrop-blur-sm cu"
                                 >
                                     <FaChevronRight size={24} />
                                 </button>
 
                                 <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
                                     <div className="flex space-x-6 pb-8 auto-scroll">
-                                        {featuredMovies.map((movie) => (
+                                        {data?.map((movie) => (
                                             <div
-                                                key={movie.id}
-                                                onClick={() => router.push(`/detail/${movie.id}`)}
+                                                key={movie.movieId}
+                                                onClick={() => router.push(`/detail/${movie.movieId}`)}
                                                 className="flex-none w-[300px] group bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 cursor-pointer"
                                             >
                                                 <div className="relative">
-                                                    <img src={movie.image} alt={movie.title} className="w-full h-72 object-cover" />
+                                                    <img src={movie.poster} alt={movie.title} className="w-full h-72 object-cover" />
                                                     <button
                                                         className="absolute top-4 right-4 p-2 bg-gray-900/80 rounded-full hover:bg-red-600 transition-colors duration-200"
                                                         onClick={(e) => e.stopPropagation()}
@@ -215,14 +236,14 @@ export default function Home() {
                                                         <span className="mx-2">•</span>
                                                         <span>{movie.duration}</span>
                                                         <span className="mx-2">•</span>
-                                                        <span>{movie.genre}</span>
+                                                        {/* <span>{movie.genre}</span> */}
                                                     </div>
                                                     <div>
                                                         <p className={`text-white/50 text-sm leading-relaxed ${showAll ? "" : "line-clamp-2"}`}>
-                                                            {movie.description}
+                                                            {movie.overview}
                                                         </p>
 
-                                                        {movie.description.length > 100 && (
+                                                        {movie.overview.length > 100 && (
                                                             <button
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
@@ -269,3 +290,4 @@ export default function Home() {
         </main>
     );
 }
+export default LandingPageComponent;

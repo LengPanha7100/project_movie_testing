@@ -1,23 +1,20 @@
 export interface Movie {
-  id: number;
+  movieId: number;
   title: string;
-  genre: string;
-  type: string;
-  rating: number;
   year: number;
-  duration: string;
-  description: string;
-  image: string;
+  duration: number;
+  rating: number;
+  overview: string;
+  directorName: string;
   isFavorite: boolean;
-  cast?: string[];
-  director?: string;
-  hasPayment?: boolean;
-  price?: number;
+  poster: string;
+  thriller: string;
+  category: string[]; 
+  castMembers: string[]; 
 }
 export interface Category {
+  categoryId : number;
   name: string;
-  type: string;
-  count: number;
 }
 
 export interface UserMovieStatus {
@@ -28,4 +25,16 @@ export interface UserMovieStatus {
   userRating?: number;
   watchProgress?: number;
   watchedAt?: Date;
+}
+
+export interface MovieResponse {
+  payload: Movie[];
+  status?: string;
+  message?: string;
+}
+
+export interface CategoryResponse {
+  payload: Category[];
+  status?: string;
+  message?: string;
 }
