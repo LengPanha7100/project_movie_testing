@@ -10,7 +10,7 @@ export interface Movie {
   poster: string;
   thriller: string;
   category: Category;
-  castMembers: string[];
+  castMembers: CastMember[];
 }
 export interface Category {
   categoryId: number;
@@ -46,4 +46,5 @@ export interface CastMember {
 
 export interface CastResponse {
   payload: CastMember[];
+  name: string;
 }

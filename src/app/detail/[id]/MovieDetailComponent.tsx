@@ -1,67 +1,30 @@
-'use client'
-import { MovieService } from "@/service/MovieService";
-// import { featuredMovies } from "@/data/ActionData";
-import { CastMember, Movie } from "@/types/Movie";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { FaArrowLeft, FaClock, FaHeart, FaPlay, FaRegHeart, FaStar, FaTicketAlt, FaUser } from "react-icons/fa";
+'use client';
+import { Movie } from "@/types/Movie";
+import { useRouter } from "next/navigation";
+import React from "react";
+import {
+    FaArrowLeft,
+    FaClock,
+    FaHeart,
+    FaPlay,
+    FaRegHeart,
+    FaStar,
+    FaTicketAlt,
+    FaUser
+} from "react-icons/fa";
 
-const MovieDetailComponent = () => {
-    const params = useParams();
-    const id = params?.id as string;
+interface MovieDetailComponent {
+    data: Movie; // ✅ Now expecting a single Movie
+}
 
-    const movieId = Number(id);
-    const [movieData, setMovieData] = useState<Movie[]>([]);
-    const [castData, setCast] = useState<CastMember[]>([])
-
-    const dataMovie = async () => {
-        try {
-            const responseMovie = await MovieService.getMovieAll();
-            console.log(responseMovie.payload);
-            if (responseMovie && responseMovie.payload) {
-                setMovieData(responseMovie.payload)
-            }
-        } catch (error) {
-            console.error("Error fetching movies:", error);
-        }
-    }
-
-    useEffect(() => {
-        dataMovie();
-    }, []);
-    const movie: Movie | undefined = movieData.find((m) => m.movieId === movieId);
-
-    if (!movie) {
-        return <div className="text-white p-10">Movie not found.</div>;
-    }
-
-    console.log(movie);
+const MovieDetailComponent: React.FC<MovieDetailComponent> = ({ data: movie }) => {
     const router = useRouter();
-
-    const responseCast = async () => {
-        try {
-            const data = await MovieService.getAllCast();
-            console.log("cast", data);
-            if (data && data.payload) {
-                setCast(data.payload);
-            }
-        } catch (error) {
-            console.log("error", error)
-        }
-    }
-
-    useEffect(() => {
-        responseCast();
-    }, [])
-
-
 
     return (
         <main className="min-h-screen bg-[#0a0a0a] text-white">
-            {/* Gradient Background */}
             <div className="fixed inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-purple-900/20 pointer-events-none" />
 
-            {/* Hero Section with Movie Poster */}
+            {/* Hero Section */}
             <div className="relative h-[80vh] w-full">
                 <div className="absolute inset-0">
                     <img
@@ -87,10 +50,7 @@ const MovieDetailComponent = () => {
 
                 {/* Favorite Button */}
                 <div className="absolute top-8 right-8 z-10">
-                    <button
-                        // onClick={handleFavoriteToggle}
-                        className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-600/80 transition-all duration-300 transform hover:scale-110"
-                    >
+                    <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-600/80 transition-all duration-300 transform hover:scale-110">
                         {movie.isFavorite ? (
                             <FaHeart className="text-red-500 w-5 h-5" />
                         ) : (
@@ -119,20 +79,22 @@ const MovieDetailComponent = () => {
                                     </div>
                                     <div className="flex items-center space-x-2">
                                         <FaClock className="text-white/60 w-5 h-5" />
-                                        <span>{movie.duration}</span>
+                                        <span>{movie.duration} min</span>
                                     </div>
                                 </div>
-                                <button className="w-full py-4 bg-red-600 hover:bg-red-700 rounded-xl flex items-center justify-center space-x-2 transition-colors">
+                                <button
+                                    className="w-full py-4 bg-red-600 hover:bg-red-700 rounded-xl flex items-center justify-center space-x-2 transition-colors"
+                                    onClick={() => router.push(`/detail/${movie.movieId}/payment`)}
+                                >
                                     <FaPlay className="w-5 h-5" />
-                                    <span className="font-semibold"
-                                        onClick={() => router.push(`/detail/${movie.movieId}/payment`)}
-                                    >Watch Now</span>
+                                    <span className="font-semibold">Watch Now</span>
                                 </button>
-                                <button className="w-full py-4 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center space-x-2 transition-colors border border-white/10">
+                                <button
+                                    className="w-full py-4 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center space-x-2 transition-colors border border-white/10"
+                                    onClick={() => router.push(`/detail/${movie.movieId}/booking`)}
+                                >
                                     <FaTicketAlt className="w-5 h-5" />
-                                    <span className="font-semibold"
-                                        onClick={() => router.push(`/detail/${movie.movieId}/booking`)}
-                                    >Book Tickets</span>
+                                    <span className="font-semibold">Book Tickets</span>
                                 </button>
                             </div>
                         </div>
@@ -145,33 +107,36 @@ const MovieDetailComponent = () => {
                             <div className="flex flex-wrap items-center gap-4 text-lg text-white/80 mb-8">
                                 <span className="px-4 py-1.5 bg-white/5 rounded-full">{movie.year}</span>
                                 <span className="text-white/40">•</span>
-                                {/* <span className="px-4 py-1.5 bg-white/5 rounded-full">{movie.genre}</span> */}
-                                {/* <span className="text-white/40">•</span> */}
-                                <span className="px-4 py-1.5 bg-white/5 rounded-full">{movie.duration}</span>
+                                <span className="px-4 py-1.5 bg-white/5 rounded-full">{movie.duration} min</span>
+                                {movie.category?.name && (
+                                    <>
+                                        <span className="text-white/40">•</span>
+                                        <span className="px-4 py-1.5 bg-white/5 rounded-full">{movie.category.name}</span>
+                                    </>
+                                )}
                             </div>
                         </div>
 
                         <div className="space-y-8">
                             <div>
                                 <h2 className="text-2xl font-semibold mb-4">Overview</h2>
-                                <p className="text-white/70 leading-relaxed text-lg">
-                                    {movie.overview}
-                                </p>
+                                <p className="text-white/70 leading-relaxed text-lg">{movie.overview}</p>
                             </div>
 
-                            {castData && castData.length > 0 && (
+                            {movie.castMembers?.length > 0 && (
                                 <div>
                                     <h2 className="text-2xl font-semibold mb-4">Cast</h2>
                                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                        {castData.map((actor, index) => (
-                                            <div key={index}
-                                                className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 border border-white/10
-                                                hover:bg-white/10 transition-colors">
+                                        {movie.castMembers.map((cast) => (
+                                            <div
+                                                key={cast.castId}
+                                                className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 border border-white/10 hover:bg-white/10 transition-colors"
+                                            >
                                                 <div className="flex items-center space-x-3">
                                                     <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
                                                         <FaUser className="w-5 h-5 text-white/60" />
                                                     </div>
-                                                    {/* <p className="text-white/90 font-medium">{name}</p> */}
+                                                    <p className="text-white/90 font-medium">{cast.name}</p>
                                                 </div>
                                             </div>
                                         ))}
@@ -179,17 +144,17 @@ const MovieDetailComponent = () => {
                                 </div>
                             )}
 
-                            {/* {movie.director && (
+                            {movie.directorName && (
                                 <div>
                                     <h2 className="text-2xl font-semibold mb-4">Director</h2>
                                     <div className="inline-flex items-center space-x-3 bg-white/5 backdrop-blur-xl rounded-2xl p-4 border border-white/10">
                                         <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
                                             <FaUser className="w-5 h-5 text-white/60" />
                                         </div>
-                                        <p className="text-white/90 font-medium">{movie.director}</p>
+                                        <p className="text-white/90 font-medium">{movie.directorName}</p>
                                     </div>
                                 </div>
-                            )} */}
+                            )}
                         </div>
                     </div>
                 </div>

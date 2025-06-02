@@ -25,4 +25,8 @@ export const MovieService = {
   getAllCast: async (): Promise<CastResponse> => {
     return await RestService.get<CastResponse>(Path.cast.list(1, 1000000));
   },
+
+  getMovieById: async (id: number): Promise<MovieResponse> => {
+    return await RestService.get<MovieResponse>(Path.movie.getById(id));
+  },
 };

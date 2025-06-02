@@ -7,6 +7,9 @@ const Path = {
         name
       )}=Action&page=${page}&size=${size}`;
     },
+    getById: (id: number): string => {
+      return `http://34.87.39.167:9082/api/v1/movies/${id}`;
+    },
   },
   category: {
     list: (page: number, size: number): string => {
