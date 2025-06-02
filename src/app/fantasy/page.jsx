@@ -1,13 +1,12 @@
 'use client'
 import { MovieService } from "@/service/MovieService";
-import { Movie } from "@/types/Movie";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaFilter, FaHeart, FaRegHeart, FaSearch, FaStar } from "react-icons/fa";
 const Page = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const router = useRouter();
-    const [movieData, setMovieData] = useState<Movie[]>([]);
+    const [movieData, setMovieData] = useState<Movie>([]);
 
     const dataMovie = async () => {
         try {
@@ -27,7 +26,7 @@ const Page = () => {
 
     console.log("Data Action ", movieData);
     const filterDataMovie = movieData.filter((movie) =>
-        movie.category.name.includes("Action") &&
+        movie.category.name.includes("Fantasy") &&
         movie.category.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
     const [showAll, setShowAll] = useState(false);
@@ -101,7 +100,7 @@ const Page = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                         {filterDataMovie.length > 0 ? (
-                            filterDataMovie.map((movie: Movie) => (
+                            filterDataMovie.map((movie) => (
                                 <div key={movie.movieId}
                                     onClick={() => router.push(`/detail/${movie.movieId}`)}
                                     className="group bg-white/5 backdrop-blur-xl rounded-3xl overflow-hidden 

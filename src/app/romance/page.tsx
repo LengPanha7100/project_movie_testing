@@ -1,15 +1,32 @@
 'use client'
-import { featuredMovies } from "@/data/ActionData";
+import { MovieService } from "@/service/MovieService";
 import { Movie } from "@/types/Movie";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaFilter, FaHeart, FaRegHeart, FaSearch, FaStar } from "react-icons/fa";
 const Page = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const router = useRouter();
-    const filterDataMovie = featuredMovies.filter((movie) =>
-        movie.type === "romance" &&
-        movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+    const [movieData, setMovieData] = useState<Movie[]>([]);
+
+    const dataMovie = async () => {
+        try {
+            const responseMovie = await MovieService.getMovieAll();
+            console.log(responseMovie.payload);
+            if (responseMovie && responseMovie.payload) {
+                setMovieData(responseMovie.payload)
+            }
+        } catch (error) {
+            console.error("Error fetching movies:", error);
+        }
+    }
+
+    useEffect(() => {
+        dataMovie();
+    }, []);
+    const filterDataMovie = movieData.filter((movie) =>
+        movie.category.name === "Romance" &&
+        movie.category.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
     const [showAll, setShowAll] = useState(false);
 
@@ -83,15 +100,15 @@ const Page = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                         {filterDataMovie.length > 0 ? (
                             filterDataMovie.map((movie: Movie) => (
-                                <div key={movie.id}
+                                <div key={movie.movieId}
                                     className="group bg-white/5 backdrop-blur-xl rounded-3xl overflow-hidden 
                                     hover:transform hover:scale-[1.02] transition-all duration-300
                                     border border-white/10 hover:border-white/20 cursor-pointer">
                                     <div className="relative">
                                         <img
-                                            src={movie.image}
+                                            src={movie.poster}
                                             alt={movie.title}
-                                            onClick={() => router.push(`/detail/${movie.id}`)}
+                                            onClick={() => router.push(`/detail/${movie.movieId}`)}
                                             className="w-full h-[300px] object-cover brightness-90 group-hover:brightness-100 transition-all duration-300"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
@@ -119,14 +136,14 @@ const Page = () => {
                                             <span className="mx-2">•</span>
                                             <span>{movie.duration}</span>
                                             <span className="mx-2">•</span>
-                                            <span>{movie.genre}</span>
+                                            {/* <span>{movie.genre}</span> */}
                                         </div>
                                         <div>
                                             <p className={`text-white/50 text-sm leading-relaxed ${showAll ? "" : "line-clamp-2"}`}>
-                                                {movie.description}
+                                                {movie.overview}
                                             </p>
 
-                                            {movie.description.length > 100 && ( // only show button if description is long
+                                            {movie.overview.length > 100 && ( // only show button if description is long
                                                 <button
                                                     onClick={() => setShowAll(!showAll)}
                                                     className="mt-2 text-blue-400 hover:underline text-sm"

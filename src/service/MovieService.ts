@@ -11,4 +11,14 @@ export const MovieService = {
       Path.category.list(1, 1000000)
     );
   },
+
+  getCategoryByName: async (
+    categoryName: string,
+    page: number,
+    size: number
+  ): Promise<MovieResponse> => {
+    return await RestService.get<MovieResponse>(
+      Path.movie.categoryByName(categoryName, page, size)
+    );
+  },
 };

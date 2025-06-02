@@ -9,11 +9,11 @@ export interface Movie {
   isFavorite: boolean;
   poster: string;
   thriller: string;
-  category: string[]; 
-  castMembers: string[]; 
+  category: Category;
+  castMembers: string[];
 }
 export interface Category {
-  categoryId : number;
+  categoryId: number;
   name: string;
 }
 

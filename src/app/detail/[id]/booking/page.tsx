@@ -171,7 +171,7 @@ export default function BookingPage() {
                                 <label className="block text-sm font-medium text-white/80 mb-4">
                                     Number of Tickets
                                 </label>
-                                {/* <select
+                                <select
                                     name="numberOfTickets"
                                     value={formData.numberOfTickets}
                                     onChange={handleInputChange}
@@ -188,20 +188,8 @@ export default function BookingPage() {
                                             {num} {num === 1 ? 'Ticket' : 'Tickets'}
                                         </option>
                                     ))}
-                                </select> */}
-                                <Select
-                                    isRequired
-                                    label="Country"
-                                    labelPlacement="outside"
-                                    name="country"
-                                    placeholder="Select country"
-                                >
-                                    <SelectItem key="ar">Argentina</SelectItem>
-                                    <SelectItem key="us">United States</SelectItem>
-                                    <SelectItem key="ca">Canada</SelectItem>
-                                    <SelectItem key="uk">United Kingdom</SelectItem>
-                                    <SelectItem key="au">Australia</SelectItem>
-                                </Select>
+                                </select>
+
                             </div>
 
                             <button
