@@ -1,24 +1,16 @@
-import { getAllCategoriesAction, getAllMovieAction } from "@/action/MovieActio";
-import LandingPageComponent from "@/components/LandingPageComponent";
-import { Category, Movie } from "@/types/Movie";
 
-type MovieResponse = {
-  payload: Movie[];
-};
-type CategoryResponse = {
-  payload: Category[];
-}
+import LandingPageComponent from "@/components/LandingPageComponent";
+import { MovieService } from "@/service/MovieService";
+
 
 export default async function Home() {
-  const movieResponse: MovieResponse = await getAllMovieAction();
-  const data = movieResponse.payload;
 
-  const categoryResponse:CategoryResponse[]  = await getAllCategoriesAction();
-  const category = categoryResponse[0].payload;
+  const responseMovieAll = await MovieService.getAllMovie();
+  console.log("123", responseMovieAll);
 
   return (
     <>
-      <LandingPageComponent data={data} category={category} />
+      <LandingPageComponent responseMovieAll={responseMovieAll} />
     </>
   );
 }

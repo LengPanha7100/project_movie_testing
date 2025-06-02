@@ -1,6 +1,6 @@
 'use client';
 import { categories } from '@/data/CategoriesData';
-import { Category, Movie } from '@/types/Movie';
+import { Movie } from '@/types/Movie';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import {
@@ -15,17 +15,15 @@ import {
     FaTicketAlt,
 } from 'react-icons/fa';
 
-// ✅ Define props interface
 interface LandingPageProps {
-    data: Movie[];
-    category: Category[];
+    responseMovieAll: Movie[];
 }
 
 
 
 
 
-const LandingPageComponent: React.FC<LandingPageProps> = ({ data, category }) => {
+const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll }) => {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [showAll, setShowAll] = useState<boolean>(false);
     const router = useRouter();
@@ -50,8 +48,8 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ data, category }) =>
     };
 
 
-    const filteredMovies = data?.filter((movie) =>
-        movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredMovies = responseMovieAll?.filter((movie) =>
+        movie?.title?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const MovieCard: React.FC<{ movie: Movie }> = ({ movie }) => (
@@ -88,7 +86,7 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ data, category }) =>
         </div>
     );
 
-    console.log(category);
+    console.log(responseMovieAll);
     return (
         <main className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
             {/* Hero Section */}
@@ -208,7 +206,7 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ data, category }) =>
 
                                 <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
                                     <div className="flex space-x-6 pb-8 auto-scroll">
-                                        {data?.map((movie) => (
+                                        {responseMovieAll?.map((movie) => (
                                             <div
                                                 key={movie.movieId}
                                                 onClick={() => router.push(`/detail/${movie.movieId}`)}
@@ -280,7 +278,7 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ data, category }) =>
                             >
                                 <div className="flex items-center justify-between">
                                     <span className="font-medium">{category.name}</span>
-                                    <span className="text-gray-400">{category.count}</span>
+                                    {/* <span className="text-gray-400">{category.count}</span> */}
                                 </div>
                             </div>
                         ))}
