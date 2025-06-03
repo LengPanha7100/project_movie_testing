@@ -48,3 +48,44 @@ export interface CastResponse {
   payload: CastMember[];
   name: string;
 }
+
+export interface NormalMovieResponse {
+  payload: Movie;
+  status?: string;
+  message?: string;
+}
+
+export interface Booking {
+  bookingId: number;
+  fullName: string;
+  email: string;
+  totalPrice: number;
+  showId: Show;
+  seatIds: Seat[];
+}
+export interface BookingResponse {
+  payload: Booking[];
+  status: string;
+  message: string;
+}
+
+export interface BookingRequest {
+  fullName: string;
+  email: string;
+  totalPrice: number;
+  showId: Show;
+  seatIds: Seat[];
+}
+
+export interface Show {
+  showId: number;
+  showDate: string;
+  showTime: string;
+  numberOfTicket: number;
+}
+
+export interface Seat {
+  seatId: number;
+  row: number;
+  number: number;
+}

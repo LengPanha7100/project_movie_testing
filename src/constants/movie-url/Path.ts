@@ -22,6 +22,11 @@ const Path = {
       return `http://34.87.39.167:9082/api/v1/cast-members?page=${page}&size=${size}`;
     },
   },
+  booking: {
+    register: (): string => {
+      return `http://34.87.39.167:9082/api/v1/bookings`;
+    },
+  },
 };
 
 export default Path;

@@ -1,5 +1,12 @@
 import Path from "@/constants/movie-url/Path";
-import { CastResponse, CategoryResponse, MovieResponse } from "@/types/Movie";
+import {
+  BookingRequest,
+  BookingResponse,
+  CastResponse,
+  CategoryResponse,
+  MovieResponse,
+  NormalMovieResponse,
+} from "@/types/Movie";
 import { RestService } from "./RestService";
 
 export const MovieService = {
@@ -26,7 +33,11 @@ export const MovieService = {
     return await RestService.get<CastResponse>(Path.cast.list(1, 1000000));
   },
 
-  getMovieById: async (id: number): Promise<MovieResponse> => {
-    return await RestService.get<MovieResponse>(Path.movie.getById(id));
+  getMovieById: async (id: number): Promise<NormalMovieResponse> => {
+    return await RestService.get<NormalMovieResponse>(Path.movie.getById(id));
+  },
+
+  registerBook: async (data: BookingRequest): Promise<BookingResponse> => {
+    return await RestService.post(Path.booking.register(), data);
   },
 };

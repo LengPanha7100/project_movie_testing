@@ -1,4 +1,6 @@
 'use client'
+import { MovieService } from '@/service/MovieService';
+import { BookingRequest, Show } from '@/types/Movie';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaArrowLeft, FaCalendar, FaClock, FaTicketAlt } from 'react-icons/fa';
@@ -16,6 +18,7 @@ const TICKET_PRICE = 5;
 
 export default function BookingPage() {
     const router = useRouter();
+    const [selectedShowId, setSelectedShowId] = useState<Show | null>(null);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -23,6 +26,34 @@ export default function BookingPage() {
         selectedTime: '',
         numberOfTickets: 1
     });
+
+    const booking = async () => {
+        if (!selectedShowId) {
+            alert("Please select a showtime");
+            return;
+        }
+
+        const requestData: BookingRequest = {
+            fullName: formData.name,
+            email: formData.email,
+            totalPrice: totalPrice,
+            showId: selectedShowId,
+            seatIds: selectedSeats.map(seat => seatMap[seat]),
+        };
+
+        try {
+            const response = await MovieService.registerBook(requestData);
+            if (response.status === "CREATED") {
+                alert('Booking submitted successfully!');
+                router.push('/home');
+            } else {
+                alert('Booking failed: ' + response.message);
+            }
+        } catch (error) {
+            alert('Error submitting booking: ' + error);
+        }
+    };
+
 
     const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
     const [step, setStep] = useState(1);
@@ -61,16 +92,26 @@ export default function BookingPage() {
         const currentCount = Number(urlParams.get('bookingCount')) || 0;
         const newCount = currentCount + 1;
         router.push(`/?bookingCount=${newCount}`);
-
         alert('Booking submitted successfully!');
 
     };
 
     const totalPrice = TICKET_PRICE * selectedSeats.length;
-
+    const seatMap: Record<string, number> = {};
     const renderSeats = () => {
         const rows = ['A', 'B', 'C', 'D', 'E', 'F'];
         const seatsPerRow = 8;
+
+        let id = 1;
+
+        for (const row of rows) {
+            for (let seatNum = 1; seatNum <= seatsPerRow; seatNum++) {
+                const seatLabel = `${row}${seatNum}`;
+                seatMap[seatLabel] = id++;
+            }
+        }
+
+        console.log("seat", seatMap);
 
         return (
             <div className="grid gap-6">

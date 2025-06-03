@@ -14,11 +14,11 @@ import {
 } from "react-icons/fa";
 
 interface MovieDetailComponent {
-    data: Movie; // ✅ Now expecting a single Movie
+    movieData: Movie;
 }
-
-const MovieDetailComponent: React.FC<MovieDetailComponent> = ({ data: movie }) => {
+export const MovieDetailComponent: React.FC<MovieDetailComponent> = ({ movieData }) => {
     const router = useRouter();
+    const movie = movieData;
 
     return (
         <main className="min-h-screen bg-[#0a0a0a] text-white">
@@ -127,9 +127,9 @@ const MovieDetailComponent: React.FC<MovieDetailComponent> = ({ data: movie }) =
                                 <div>
                                     <h2 className="text-2xl font-semibold mb-4">Cast</h2>
                                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                        {movie.castMembers.map((cast) => (
+                                        {movie.castMembers.map((cast, index) => (
                                             <div
-                                                key={cast.castId}
+                                                key={index}
                                                 className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 border border-white/10 hover:bg-white/10 transition-colors"
                                             >
                                                 <div className="flex items-center space-x-3">
@@ -163,4 +163,3 @@ const MovieDetailComponent: React.FC<MovieDetailComponent> = ({ data: movie }) =
     );
 };
 
-export default MovieDetailComponent;
