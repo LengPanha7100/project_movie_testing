@@ -6,6 +6,10 @@ import {
   CategoryResponse,
   MovieResponse,
   NormalMovieResponse,
+  SeatRequest,
+  SeatResponse,
+  ShowRequest,
+  ShowResponse,
 } from "@/types/Movie";
 import { RestService } from "./RestService";
 
@@ -37,7 +41,28 @@ export const MovieService = {
     return await RestService.get<NormalMovieResponse>(Path.movie.getById(id));
   },
 
+  createShow: async (data: ShowRequest): Promise<ShowResponse> => {
+    return await RestService.post(Path.show.create(), data);
+  },
+
+  createSeat: async (data: SeatRequest): Promise<SeatResponse> => {
+    return await RestService.post(Path.seat.create(), data);
+  },
+
   registerBook: async (data: BookingRequest): Promise<BookingResponse> => {
     return await RestService.post(Path.booking.register(), data);
+  },
+
+  FavoritesUpdate: async (
+    id: number,
+    status: boolean
+  ): Promise<MovieResponse> => {
+    return await RestService.patch(Path.favorites.update(id, status));
+  },
+
+  getAllBooking: async (): Promise<BookingResponse> => {
+    return await RestService.get<BookingResponse>(
+      Path.booking.list(1, 1000000)
+    );
   },
 };

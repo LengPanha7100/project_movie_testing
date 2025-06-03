@@ -8,7 +8,7 @@ export interface Movie {
   directorName: string;
   isFavorite: boolean;
   poster: string;
-  thriller: string;
+  thriller?: string;
   category: Category;
   castMembers: CastMember[];
 }
@@ -60,8 +60,8 @@ export interface Booking {
   fullName: string;
   email: string;
   totalPrice: number;
-  showId: Show;
-  seatIds: Seat[];
+  show: Show;
+  seats: Seat[];
 }
 export interface BookingResponse {
   payload: Booking[];
@@ -69,14 +69,36 @@ export interface BookingResponse {
   message: string;
 }
 
+export interface ShowResponse {
+  payload: Show;
+  status: string;
+  message: string;
+}
+
+export interface SeatResponse {
+  payload: Seat;
+  status: string;
+  message: string;
+}
+
+export interface ShowRequest {
+  showDate: string;
+  showTime: string;
+  numberOfTicket: number;
+  movieId: number;
+}
+
+export interface SeatRequest {
+  row: string;
+  number: number;
+}
 export interface BookingRequest {
   fullName: string;
   email: string;
   totalPrice: number;
-  showId: Show;
-  seatIds: Seat[];
+  showId: number;
+  seatIds: number[];
 }
-
 export interface Show {
   showId: number;
   showDate: string;

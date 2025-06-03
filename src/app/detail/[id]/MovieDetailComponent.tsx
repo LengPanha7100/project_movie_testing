@@ -84,7 +84,7 @@ export const MovieDetailComponent: React.FC<MovieDetailComponent> = ({ movieData
                                 </div>
                                 <button
                                     className="w-full py-4 bg-red-600 hover:bg-red-700 rounded-xl flex items-center justify-center space-x-2 transition-colors"
-                                    onClick={() => router.push(`/detail/${movie.movieId}/payment`)}
+                                    onClick={() => router.push(`/detail/${movie.movieId}/watch`)}
                                 >
                                     <FaPlay className="w-5 h-5" />
                                     <span className="font-semibold">Watch Now</span>

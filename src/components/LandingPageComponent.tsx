@@ -1,5 +1,6 @@
 'use client';
-import { CategoryResponse, Movie, MovieResponse } from '@/types/Movie';
+import { MovieService } from '@/service/MovieService';
+import { BookingResponse, CategoryResponse, Movie, MovieResponse } from '@/types/Movie';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import {
@@ -16,14 +17,11 @@ import {
 
 interface LandingPageProps {
     responseMovieAll: MovieResponse;
-    responseCategory: CategoryResponse
+    responseCategory: CategoryResponse;
+    responseBooking: BookingResponse;
 }
 
-
-
-
-
-const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, responseCategory }) => {
+const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, responseCategory, responseBooking }) => {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [showAll, setShowAll] = useState<boolean>(false);
     const router = useRouter();
@@ -46,6 +44,27 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, re
             });
         }
     };
+
+
+
+
+    const [movieList, setMovieList] = useState<Movie[]>(responseMovieAll.payload);
+
+    const handleOnClick = async (movieId: number, isCurrentlyFavorite: boolean) => {
+        try {
+            const response = await MovieService.FavoritesUpdate(movieId, !isCurrentlyFavorite);
+            if (response?.payload !== null) {
+                setMovieList((prevList) =>
+                    prevList.map((movie) =>
+                        movie.movieId === movieId ? { ...movie, isFavorite: !isCurrentlyFavorite } : movie
+                    )
+                );
+            }
+        } catch (error) {
+            console.error("Error updating favorite status:", error);
+        }
+    };
+
 
 
     const filteredMovies = responseMovieAll?.payload?.filter((movie) =>
@@ -86,7 +105,6 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, re
         </div>
     );
 
-    console.log(responseMovieAll);
     return (
         <main className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
             {/* Hero Section */}
@@ -108,7 +126,8 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, re
                             An epic journey through uncharted territories where danger and discovery await at every turn.
                         </p>
                         <div className="flex items-center space-x-4">
-                            <button className="flex items-center px-8 py-4 bg-red-600 hover:bg-red-700 rounded-lg transform hover:scale-105 transition-all duration-200">
+                            <button className="flex items-center px-8 py-4 bg-red-600 hover:bg-red-700 rounded-lg transform hover:scale-105 transition-all duration-200"
+                            >
                                 <FaPlay className="mr-2" />
                                 Watch Now
                             </button>
@@ -145,9 +164,10 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, re
                             <FaFilter className="mr-2" />
                             Filter
                         </button>
-                        <button className="flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-200">
+                        <button className="flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors cursor-pointer duration-200"
+                            onClick={() => router.push('/titketBooking')}>
                             <FaTicketAlt className="mr-2" />
-                            Book Now {bookingCount}
+                            Book Now {responseBooking.payload.length}
                         </button>
                     </div>
                 </div>
@@ -206,7 +226,7 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, re
 
                                 <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
                                     <div className="flex space-x-6 pb-8 auto-scroll">
-                                        {responseMovieAll?.payload?.map((movie) => (
+                                        {movieList.map((movie) => (
                                             <div
                                                 key={movie.movieId}
                                                 onClick={() => router.push(`/detail/${movie.movieId}`)}
@@ -215,8 +235,11 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, re
                                                 <div className="relative">
                                                     <img src={movie.poster} alt={movie.title} className="w-full h-72 object-cover" />
                                                     <button
-                                                        className="absolute top-4 right-4 p-2 bg-gray-900/80 rounded-full hover:bg-red-600 transition-colors duration-200"
-                                                        onClick={(e) => e.stopPropagation()}
+                                                        className="absolute top-4 right-4 p-2 bg-gray-900/80 rounded-full cursor-pointer transition-colors duration-200"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleOnClick(movie.movieId, movie.isFavorite);
+                                                        }}
                                                     >
                                                         {movie.isFavorite ? <FaHeart className="text-red-500" /> : <FaRegHeart className="text-white" />}
                                                     </button>

@@ -1,6 +1,4 @@
 'use client';
-import { featuredMovies } from '@/data/ActionData';
-import { Movie } from '@/types/Movie';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaArrowLeft, FaStar } from 'react-icons/fa';
@@ -16,13 +14,13 @@ const PaymentPage = () => {
     const id = params?.id as string;
 
     const movieId = Number(id);
-    const movie: Movie | undefined = featuredMovies.find((m) => m.id === movieId);
+    // const movie: Movie | undefined = featuredMovies.find((m) => m.id === movieId);
 
-    if (!movie) {
-        return <div className="text-white p-10">Movie not found.</div>;
-    }
+    // if (!movie) {
+    //     return <div className="text-white p-10">Movie not found.</div>;
+    // }
 
-    console.log(movie);
+    // console.log(movie);
 
     const handlePayment = async (e: React.FormEvent) => {
         e.preventDefault();

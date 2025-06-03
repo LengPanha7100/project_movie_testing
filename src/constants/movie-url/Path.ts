@@ -22,9 +22,30 @@ const Path = {
       return `http://34.87.39.167:9082/api/v1/cast-members?page=${page}&size=${size}`;
     },
   },
+  show: {
+    create: (): string => {
+      return "http://34.87.39.167:9082/api/v1/shows";
+    },
+  },
+
+  seat: {
+    create: (): string => {
+      return "http://34.87.39.167:9082/api/v1/seats";
+    },
+  },
+
   booking: {
     register: (): string => {
       return `http://34.87.39.167:9082/api/v1/bookings`;
+    },
+    list: (page: number, size: number): string => {
+      return `http://34.87.39.167:9082/api/v1/bookings?page=${page}&size=${size}`;
+    },
+  },
+
+  favorites: {
+    update: (id: number, status: boolean): string => {
+      return `http://34.87.39.167:9082/api/v1/movies/${id}/favorite?status=${status}`;
     },
   },
 };

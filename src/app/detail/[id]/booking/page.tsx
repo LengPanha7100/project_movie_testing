@@ -1,9 +1,9 @@
-'use client'
-import { MovieService } from '@/service/MovieService';
-import { BookingRequest, Show } from '@/types/Movie';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { FaArrowLeft, FaCalendar, FaClock, FaTicketAlt } from 'react-icons/fa';
+"use client";
+import { MovieService } from "@/service/MovieService";
+import { BookingRequest, SeatRequest, ShowRequest } from "@/types/Movie";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { FaArrowLeft, FaCalendar, FaClock, FaTicketAlt } from "react-icons/fa";
 import { MdEventSeat } from "react-icons/md";
 
 const AVAILABLE_TIMES = [
@@ -17,89 +17,124 @@ const AVAILABLE_TIMES = [
 const TICKET_PRICE = 5;
 
 export default function BookingPage() {
+    const param = useParams();
     const router = useRouter();
-    const [selectedShowId, setSelectedShowId] = useState<Show | null>(null);
+    const [showId, setShowId] = useState<Number>(0);
+    const [seatIds, setSeatIds] = useState<Array<Number>>([]);
     const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        date: '',
-        selectedTime: '',
-        numberOfTickets: 1
+        showDate: "",
+        showTime: "",
+        numberOfTicket: 1,
+        movieId: param.id,
+        fullName: "",
+        email: "",
+        totalPrice: 1,
     });
-
-    const booking = async () => {
-        if (!selectedShowId) {
-            alert("Please select a showtime");
-            return;
-        }
-
-        const requestData: BookingRequest = {
-            fullName: formData.name,
-            email: formData.email,
-            totalPrice: totalPrice,
-            showId: selectedShowId,
-            seatIds: selectedSeats.map(seat => seatMap[seat]),
-        };
-
-        try {
-            const response = await MovieService.registerBook(requestData);
-            if (response.status === "CREATED") {
-                alert('Booking submitted successfully!');
-                router.push('/home');
-            } else {
-                alert('Booking failed: ' + response.message);
-            }
-        } catch (error) {
-            alert('Error submitting booking: ' + error);
-        }
-    };
-
 
     const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
     const [step, setStep] = useState(1);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleInputChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [name]: value
+            [name]: value,
         }));
     };
 
     const handleTimeSelect = (time: string) => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            selectedTime: time
+            showTime: time,
         }));
     };
 
     const handleSeatToggle = (seat: string) => {
-        setSelectedSeats(prev => {
+        setSelectedSeats((prev) => {
             if (prev.includes(seat)) {
-                return prev.filter(s => s !== seat);
-            } else if (prev.length < Number(formData.numberOfTickets)) {
+                return prev.filter((s) => s !== seat);
+            } else if (prev.length < Number(formData.numberOfTicket)) {
                 return [...prev, seat];
             } else {
-                alert(`You can only select ${formData.numberOfTickets} seat${formData.numberOfTickets > 1 ? 's' : ''}`);
+                alert(
+                    `You can only select ${formData.numberOfTicket} seat${formData.numberOfTicket > 1 ? "s" : ""
+                    }`
+                );
                 return prev;
             }
         });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentCount = Number(urlParams.get('bookingCount')) || 0;
-        const newCount = currentCount + 1;
-        router.push(`/?bookingCount=${newCount}`);
-        alert('Booking submitted successfully!');
+    const handleSubmitShow = async () => {
+        const showRequestData: ShowRequest = {
+            showDate: formData.showDate,
+            showTime: formData.showTime,
+            numberOfTicket: formData.numberOfTicket,
+            movieId: Number(formData.movieId),
+        };
 
+        try {
+            const response = await MovieService.createShow(showRequestData);
+            if (response.status === "CREATED") {
+                setShowId(response.payload.showId);
+                setStep(2);
+            } else {
+                alert("Seat failed: " + response.message);
+            }
+        } catch (error) {
+            alert("Error submitting booking: " + error);
+        }
+    };
+
+    const handleSubmitSeat = async () => {
+        for (const seat of selectedSeats) {
+            const seatRequestData: SeatRequest = {
+                row: seat.charAt(0),
+                number: Number(seat.charAt(1)),
+            };
+
+            try {
+                const response = await MovieService.createSeat(seatRequestData);
+                if (response.status === "CREATED") {
+                    setSeatIds((prev) => [...prev, response.payload.seatId]);
+                    setStep(3);
+                } else {
+                    alert("Seat failed: " + response.message);
+                }
+            } catch (error) {
+                alert("Error submitting booking: " + error);
+            }
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const requestData: BookingRequest = {
+            fullName: formData.fullName,
+            email: formData.email,
+            totalPrice: totalPrice,
+            showId: Number(showId),
+            seatIds: seatIds.map((seatId) => Number(seatId)),
+        };
+
+        try {
+            const response = await MovieService.registerBook(requestData);
+            if (response.status === "CREATED") {
+                router.push(`/titketBooking`);
+            } else {
+                alert("Book failed: " + response.message);
+            }
+        } catch (error) {
+            alert("Error submitting booking: " + error);
+        }
     };
 
     const totalPrice = TICKET_PRICE * selectedSeats.length;
     const seatMap: Record<string, number> = {};
     const renderSeats = () => {
-        const rows = ['A', 'B', 'C', 'D', 'E', 'F'];
+        const rows = ["A", "B", "C", "D", "E", "F"];
         const seatsPerRow = 8;
 
         let id = 1;
@@ -111,17 +146,17 @@ export default function BookingPage() {
             }
         }
 
-        console.log("seat", seatMap);
-
         return (
             <div className="grid gap-6">
                 <div className="w-full bg-white/5 h-2 rounded-full mb-8" />
-                {rows.map(row => (
+                {rows.map((row) => (
                     <div key={row} className="flex justify-center gap-2">
                         {Array.from({ length: seatsPerRow }, (_, i) => {
                             const seatNumber = `${row}${i + 1}`;
                             const isSelected = selectedSeats.includes(seatNumber);
-                            const isDisabled = !isSelected && selectedSeats.length >= Number(formData.numberOfTickets);
+                            const isDisabled =
+                                !isSelected &&
+                                selectedSeats.length >= Number(formData.numberOfTicket);
 
                             return (
                                 <button
@@ -129,11 +164,21 @@ export default function BookingPage() {
                                     onClick={() => handleSeatToggle(seatNumber)}
                                     disabled={isDisabled}
                                     className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-medium
-                                        ${isSelected ? 'bg-blue-500 text-white' : 'bg-white/5'}
-                                        ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/20'}
+                                        ${isSelected
+                                            ? "bg-blue-500 text-white"
+                                            : "bg-white/5"
+                                        }
+                                        ${isDisabled
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : "hover:bg-white/20"
+                                        }
                                         transition-all duration-200`}
                                 >
-                                    {isSelected ? <MdEventSeat className="w-5 h-5" /> : seatNumber}
+                                    {isSelected ? (
+                                        <MdEventSeat className="w-5 h-5" />
+                                    ) : (
+                                        seatNumber
+                                    )}
                                 </button>
                             );
                         })}
@@ -158,13 +203,20 @@ export default function BookingPage() {
                 </button>
 
                 <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10">
-                    <h1 className="text-3xl font-bold mb-2 text-center">Book Movie Tickets</h1>
+                    <h1 className="text-3xl font-bold mb-2 text-center">
+                        Book Movie Tickets
+                    </h1>
 
                     <div className="flex items-center justify-center mb-12">
                         {[1, 2, 3].map((s) => (
                             <div key={s} className="flex items-center">
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center
-                                    ${step === s ? 'bg-blue-500 text-white' : 'bg-white/10 text-white/60'}`}>
+                                <div
+                                    className={`w-8 h-8 rounded-full flex items-center justify-center
+                                    ${step === s
+                                            ? "bg-blue-500 text-white"
+                                            : "bg-white/10 text-white/60"
+                                        }`}
+                                >
                                     {s}
                                 </div>
                                 {s < 3 && <div className="w-16 h-0.5 bg-white/10" />}
@@ -177,11 +229,11 @@ export default function BookingPage() {
                             <div>
                                 <input
                                     type="date"
-                                    name="date"
+                                    name="showDate"
                                     required
-                                    value={formData.date}
+                                    value={formData.showDate}
                                     onChange={handleInputChange}
-                                    min={new Date().toISOString().split('T')[0]}
+                                    min={new Date().toISOString().split("T")[0]}
                                     className="w-full pl-10 px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20"
                                 />
                             </div>
@@ -197,8 +249,14 @@ export default function BookingPage() {
                                             disabled={!t.available}
                                             onClick={() => handleTimeSelect(t.time)}
                                             className={`p-4 rounded-xl flex items-center justify-center space-x-2
-                                                ${formData.selectedTime === t.time ? 'bg-blue-500 text-white' : 'bg-white/5'}
-                                                ${!t.available ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/10'}
+                                                ${formData.showTime === t.time
+                                                    ? "bg-blue-500 text-white"
+                                                    : "bg-white/5"
+                                                }
+                                                ${!t.available
+                                                    ? "opacity-50 cursor-not-allowed"
+                                                    : "hover:bg-white/10"
+                                                }
                                                 transition-all duration-200`}
                                         >
                                             <FaClock className="w-4 h-4" />
@@ -213,29 +271,31 @@ export default function BookingPage() {
                                     Number of Tickets
                                 </label>
                                 <select
-                                    name="numberOfTickets"
-                                    value={formData.numberOfTickets}
+                                    name="numberOfTicket"
+                                    value={formData.numberOfTicket}
                                     onChange={handleInputChange}
                                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20"
-                                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', color: 'white' }}
+                                    style={{
+                                        backgroundColor: "rgba(255, 255, 255, 0.05)",
+                                        color: "white",
+                                    }}
                                 >
-                                    {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
+                                    {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                                         <option
                                             key={num}
                                             value={num}
                                             className="bg-[#121212] text-white"
-                                            style={{ backgroundColor: '#121212', color: 'white' }}
+                                            style={{ backgroundColor: "#121212", color: "white" }}
                                         >
-                                            {num} {num === 1 ? 'Ticket' : 'Tickets'}
+                                            {num} {num === 1 ? "Ticket" : "Tickets"}
                                         </option>
                                     ))}
                                 </select>
-
                             </div>
 
                             <button
-                                onClick={() => setStep(2)}
-                                disabled={!formData.date || !formData.selectedTime}
+                                onClick={handleSubmitShow}
+                                disabled={!formData.showDate || !formData.showTime}
                                 className="w-full py-4 bg-blue-500 hover:bg-blue-600 disabled:bg-white/5 disabled:cursor-not-allowed
                                     rounded-xl font-semibold transition-colors mt-8"
                             >
@@ -248,13 +308,15 @@ export default function BookingPage() {
                         <div className="space-y-8">
                             <div className="text-center space-y-2">
                                 <p className="text-white/60">
-                                    Select {formData.numberOfTickets} {formData.numberOfTickets === 1 ? 'seat' : 'seats'}
+                                    Select {formData.numberOfTicket}{" "}
+                                    {formData.numberOfTicket === 1 ? "seat" : "seats"}
                                 </p>
                                 <p className="text-sm text-white/40">Screen this way</p>
                             </div>
 
                             <p className="text-center text-sm text-white/50">
-                                {selectedSeats.length} of {formData.numberOfTickets} {formData.numberOfTickets === 1 ? 'seat' : 'seats'} selected
+                                {selectedSeats.length} of {formData.numberOfTicket}{" "}
+                                {formData.numberOfTicket === 1 ? "seat" : "seats"} selected
                             </p>
 
                             {renderSeats()}
@@ -262,7 +324,9 @@ export default function BookingPage() {
                             <div className="flex justify-between items-center p-4 bg-white/5 rounded-xl mt-8">
                                 <div>
                                     <p className="text-sm text-white/60">Selected Seats</p>
-                                    <p className="font-medium">{selectedSeats.join(', ') || 'None'}</p>
+                                    <p className="font-medium">
+                                        {selectedSeats.join(", ") || "None"}
+                                    </p>
                                 </div>
                                 <div className="text-right">
                                     <p className="text-sm text-white/60">Total Price</p>
@@ -278,8 +342,10 @@ export default function BookingPage() {
                                     Back
                                 </button>
                                 <button
-                                    onClick={() => setStep(3)}
-                                    disabled={selectedSeats.length !== Number(formData.numberOfTickets)}
+                                    onClick={handleSubmitSeat}
+                                    disabled={
+                                        selectedSeats.length !== Number(formData.numberOfTicket)
+                                    }
                                     className="w-1/2 py-4 bg-blue-500 hover:bg-blue-600 disabled:bg-white/5 disabled:cursor-not-allowed
                                         rounded-xl font-semibold transition-colors"
                                 >
@@ -295,39 +361,45 @@ export default function BookingPage() {
                                 <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center space-x-2">
                                         <FaCalendar className="text-white/60" />
-                                        <span>{formData.date}</span>
+                                        <span>{formData.showDate}</span>
                                     </div>
                                     <div className="flex items-center space-x-2">
                                         <FaClock className="text-white/60" />
-                                        <span>{formData.selectedTime}</span>
+                                        <span>{formData.showTime}</span>
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center space-x-2">
                                         <FaTicketAlt className="text-white/60" />
-                                        <span>{selectedSeats.join(', ')}</span>
+                                        <span>{selectedSeats.join(", ")}</span>
                                     </div>
                                     <span className="font-medium">${totalPrice.toFixed(2)}</span>
                                 </div>
                             </div>
 
                             <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-white/80 mb-2">
+                                <label
+                                    htmlFor="name"
+                                    className="block text-sm font-medium text-white/80 mb-2"
+                                >
                                     Full Name
                                 </label>
                                 <input
                                     type="text"
-                                    id="name"
-                                    name="name"
+                                    id="fullName"
+                                    name="fullName"
                                     required
-                                    value={formData.name}
+                                    value={formData.fullName}
                                     onChange={handleInputChange}
                                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20"
                                 />
                             </div>
 
                             <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-2">
+                                <label
+                                    htmlFor="email"
+                                    className="block text-sm font-medium text-white/80 mb-2"
+                                >
                                     Email
                                 </label>
                                 <input
@@ -361,5 +433,5 @@ export default function BookingPage() {
                 </div>
             </div>
         </main>
-    )
+    );
 }
