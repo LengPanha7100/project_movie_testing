@@ -43,21 +43,18 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, re
             });
         }
     };
-
-
-
-
     const [movieList, setMovieList] = useState<Movie[]>(responseMovieAll.payload);
-    const [favorites, setFavorites] = useState<boolean>(false);
-
-    const handleOnClick = async () => {
-        setFavorites(true);
-        console.log("true")
+    const handleOnClick = (movieId: number) => {
+        setMovieList((prevList) =>
+            prevList.map((movie) =>
+                movie.movieId === movieId
+                    ? { ...movie, isFavorite: !movie.isFavorite }
+                    : movie
+            )
+        );
     };
 
-
-
-    const filteredMovies = responseMovieAll?.payload?.filter((movie) =>
+    const filteredMovies = movieList.filter((movie) =>
         movie?.category?.name &&
         movie?.title?.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -70,8 +67,11 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, re
             <div className="relative">
                 <img src={movie.poster} alt={movie.title} className="w-full h-72 object-cover" />
                 <button
-                    className="absolute top-4 right-4 p-2 bg-gray-900/80 rounded-full hover:bg-red-600 transition-colors duration-200"
-                    onClick={(e) => e.stopPropagation()}
+                    className="absolute top-4 right-4 p-2 bg-gray-900/80 rounded-full duration-200 cursor-pointer"
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        handleOnClick(movie.movieId)
+                    }}
                 >
                     {movie.isFavorite ? <FaHeart className="text-red-500" /> : <FaRegHeart className="text-white" />}
                 </button>
@@ -230,7 +230,7 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, re
                                                         className="absolute top-4 right-4 p-2 bg-gray-900/80 rounded-full cursor-pointer transition-colors duration-200"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
-                                                            handleOnClick();
+                                                            handleOnClick(movie.movieId);
                                                         }}
                                                     >
                                                         {movie.isFavorite ? <FaHeart className="text-red-500" /> : <FaRegHeart className="text-white" />}

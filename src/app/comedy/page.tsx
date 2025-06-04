@@ -30,7 +30,15 @@ const Page = () => {
     )
     const [showAll, setShowAll] = useState(false);
 
-    console.log(filterDataMovie)
+    const toggleFavorite = (movieId: number) => {
+        setMovieData((prevList) =>
+            prevList.map((movie) =>
+                movie.movieId === movieId
+                    ? { ...movie, isFavorite: !movie.isFavorite }
+                    : movie
+            )
+        );
+    };
     return (
         <main className="min-h-screen bg-[#0a0a0a] text-white">
             {/* Gradient Background */}
@@ -117,8 +125,12 @@ const Page = () => {
                                         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
                                         <button
                                             className="absolute top-4 right-4 p-3 bg-black/40 backdrop-blur-xl rounded-full
-                                            hover:bg-red-600/80 transition-all duration-300 transform hover:scale-110
-                                            focus:outline-none focus:ring-2 focus:ring-red-500/50">
+                                            transition-all duration-300 transform hover:scale-110"
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                toggleFavorite(movie.movieId)
+                                            }}
+                                        >
                                             {movie.isFavorite ? (
                                                 <FaHeart className="text-red-500 w-5 h-5" />
                                             ) : (

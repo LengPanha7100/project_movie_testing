@@ -10,10 +10,12 @@ export default function FavoritesPage() {
     const [, setFavorites] = useState<number[]>([]);
 
     const toggleFavorite = (movieId: number) => {
-        setFavorites(prev =>
-            prev.includes(movieId)
-                ? prev.filter(id => id !== movieId)
-                : [...prev, movieId]
+        setMovieData((prevList) =>
+            prevList.map((movie) =>
+                movie.movieId === movieId
+                    ? { ...movie, isFavorite: !movie.isFavorite }
+                    : movie
+            )
         );
     };
 
@@ -36,6 +38,7 @@ export default function FavoritesPage() {
         }
     }
 
+    console.log("frfref", movieData);
     useEffect(() => {
         dataMovie();
     }, []);
@@ -91,7 +94,7 @@ export default function FavoritesPage() {
                                     {/* Favorite Button */}
                                     <button
                                         onClick={() => toggleFavorite(movie.movieId)}
-                                        className="absolute top-4 right-4 p-3 bg-gray-900/80 rounded-full
+                                        className="absolute top-4 right-4 p-3 bg-gray-900/80 rounded-full cursor-pointer
                                                  hover:bg-purple-600/80 transition-all duration-300
                                                  transform hover:scale-110"
                                     >
