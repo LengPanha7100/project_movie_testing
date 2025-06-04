@@ -21,7 +21,7 @@ export default function FavoritesPage() {
 
     const router = useRouter();
     const handleBackClick = () => {
-        router.push('/');
+        router.push('/home');
     };
     const [showAll, setShowAll] = useState(false);
     const [movieData, setMovieData] = useState<Movie[]>([]);
