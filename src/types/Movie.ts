@@ -111,3 +111,19 @@ export interface Seat {
   row: number;
   number: number;
 }
+
+export interface EditFormData {
+  fullName: string;
+  email: string;
+  totalPrice: number;
+  showId: number;
+  seatIds: number[];
+}
+
+export interface EditFormRequest {
+  fullName: string;
+  email: string;
+  totalPrice: number;
+  showId: number;
+  seatIds: number[];
+}

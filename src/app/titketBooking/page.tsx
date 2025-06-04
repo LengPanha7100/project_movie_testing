@@ -1,6 +1,6 @@
 'use client'
 import { MovieService } from "@/service/MovieService";
-import { Booking } from "@/types/Movie";
+import { Booking, EditFormRequest } from "@/types/Movie";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -102,7 +102,6 @@ const Page = () => {
         );
     }
 
-
     const openDeleteModal = (booking: Booking) => {
         console.log("Delete id : ", booking.bookingId);
         setSelectedBooking(booking);
@@ -111,37 +110,63 @@ const Page = () => {
     };
 
     const openEditModal = (booking: Booking) => {
+        console.log("Id", booking.bookingId);
         setSelectedBooking(booking);
         setEditForm({ fullName: booking.fullName, email: booking.email });
         setIsEditOpen(true);
     };
 
-    const handleEditSave = () => {
+
+
+    const handleEditSave = async () => {
         if (!selectedBooking) return;
-        setBookingData((prev) =>
-            prev.map((b) =>
-                b.bookingId === selectedBooking.bookingId
-                    ? { ...b, ...editForm }
-                    : b
-            )
-        );
-        setIsEditOpen(false);
+        const id = selectedBooking.bookingId;
+        console.log("ID", id);
+        if (!id) return;
+        const request: EditFormRequest = {
+            fullName: editForm.fullName,
+            email: editForm.email,
+            totalPrice: selectedBooking.totalPrice,
+            showId: selectedBooking.show.showId,
+            seatIds: selectedBooking.seats.map((seat) => seat.seatId),
+
+        }
+        try {
+            const res = await MovieService.updateBooking(id, request);
+
+            if (res !== null) {
+                // Update bookingData with the new edited form
+                setBookingData(prev =>
+                    prev.map(b =>
+                        b.bookingId === id
+                            ? { ...b, ...editForm }
+                            : b
+                    )
+                );
+                setIsEditOpen(false);
+            } else {
+                console.error("Update failed: No response received");
+            }
+        } catch (error) {
+            console.error("Update failed:", error);
+        }
+
     };
 
 
     const handleDelete = async () => {
         const id = selectedBooking?.bookingId as number;
         if (!id) return;
-
-        try {
-            await MovieService.deleteBooking(id);
+        const res = await MovieService.deleteBooking(id)
+        console.log("data res", res);
+        if (res.status === "OK") {
             setBookingData((prev) => prev.filter((b) => b.bookingId !== id));
             setIsDeleteOpen(false);
-        } catch (error) {
-            console.error("Delete failed:", error);
-            // Optional: show error message to the user
+        } else {
+            console.log("error")
         }
-    };
+
+    }
 
     return (
         <main className="min-h-screen bg-[#0a0a0a] text-white">

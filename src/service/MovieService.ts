@@ -4,6 +4,7 @@ import {
   BookingResponse,
   CastResponse,
   CategoryResponse,
+  EditFormRequest,
   MovieResponse,
   NormalMovieResponse,
   SeatRequest,
@@ -68,5 +69,12 @@ export const MovieService = {
 
   deleteBooking: async (id: number): Promise<BookingResponse> => {
     return await RestService.delete(Path.booking.delete(id));
+  },
+
+  updateBooking: async (
+    id: number,
+    data: EditFormRequest
+  ): Promise<BookingResponse> => {
+    return await RestService.put(Path.booking.update(id), data);
   },
 };

@@ -117,7 +117,8 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, re
                             An epic journey through uncharted territories where danger and discovery await at every turn.
                         </p>
                         <div className="flex items-center space-x-4">
-                            <button className="flex items-center px-8 py-4 bg-red-600 hover:bg-red-700 rounded-lg transform hover:scale-105 transition-all duration-200"
+                            <button className="flex items-center px-8 py-4 bg-red-600 hover:bg-red-700 rounded-lg cursor-pointer transform hover:scale-105 transition-all duration-200"
+                                onClick={() => router.push('/watch')}
                             >
                                 <FaPlay className="mr-2" />
                                 Watch Now
