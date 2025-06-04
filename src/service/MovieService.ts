@@ -65,4 +65,8 @@ export const MovieService = {
       Path.booking.list(1, 1000000)
     );
   },
+
+  deleteBooking: async (id: number): Promise<BookingResponse> => {
+    return await RestService.delete(Path.booking.delete(id));
+  },
 };

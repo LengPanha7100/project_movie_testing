@@ -41,6 +41,9 @@ const Path = {
     list: (page: number, size: number): string => {
       return `http://34.87.39.167:9082/api/v1/bookings?page=${page}&size=${size}`;
     },
+    delete: (id: number) => {
+      return `http://34.87.39.167:9082/api/v1/bookings/${id}`;
+    },
   },
 
   favorites: {

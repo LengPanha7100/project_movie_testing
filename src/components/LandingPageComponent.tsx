@@ -1,5 +1,4 @@
 'use client';
-import { MovieService } from '@/service/MovieService';
 import { BookingResponse, CategoryResponse, Movie, MovieResponse } from '@/types/Movie';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useRef, useState } from 'react';
@@ -49,25 +48,17 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, re
 
 
     const [movieList, setMovieList] = useState<Movie[]>(responseMovieAll.payload);
+    const [favorites, setFavorites] = useState<boolean>(false);
 
-    const handleOnClick = async (movieId: number, isCurrentlyFavorite: boolean) => {
-        try {
-            const response = await MovieService.FavoritesUpdate(movieId, !isCurrentlyFavorite);
-            if (response?.payload !== null) {
-                setMovieList((prevList) =>
-                    prevList.map((movie) =>
-                        movie.movieId === movieId ? { ...movie, isFavorite: !isCurrentlyFavorite } : movie
-                    )
-                );
-            }
-        } catch (error) {
-            console.error("Error updating favorite status:", error);
-        }
+    const handleOnClick = async () => {
+        setFavorites(true);
+        console.log("true")
     };
 
 
 
     const filteredMovies = responseMovieAll?.payload?.filter((movie) =>
+        movie?.category?.name &&
         movie?.title?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -238,7 +229,7 @@ const LandingPageComponent: React.FC<LandingPageProps> = ({ responseMovieAll, re
                                                         className="absolute top-4 right-4 p-2 bg-gray-900/80 rounded-full cursor-pointer transition-colors duration-200"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
-                                                            handleOnClick(movie.movieId, movie.isFavorite);
+                                                            handleOnClick();
                                                         }}
                                                     >
                                                         {movie.isFavorite ? <FaHeart className="text-red-500" /> : <FaRegHeart className="text-white" />}

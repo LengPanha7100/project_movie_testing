@@ -3,15 +3,27 @@ import { MovieService } from "@/service/MovieService";
 import { Booking } from "@/types/Movie";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaClock, FaEnvelope, FaSearch, FaTicketAlt, FaUser } from "react-icons/fa";
-
+import {
+    FaClock,
+    FaEdit,
+    FaEnvelope,
+    FaSearch,
+    FaTicketAlt,
+    FaTrashAlt,
+    FaUser,
+} from "react-icons/fa";
 const Page = () => {
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState("");
     const router = useRouter();
     const [bookingData, setBookingData] = useState<Booking[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [selectedStatus, setSelectedStatus] = useState<string>('all');
+
+    // ────── Delete & Edit modal state ──────
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+    const [editForm, setEditForm] = useState({ fullName: "", email: "" });
 
     const fetchBookings = async () => {
         try {
@@ -27,24 +39,26 @@ const Page = () => {
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         fetchBookings();
     }, []);
 
+    // ────── Helpers ──────
+    const formatDate = (dateString?: string) => {
+        if (!dateString) return "Date not available";
+        try {
+            return new Date(dateString).toLocaleDateString();
+        } catch {
+            return "Invalid date";
+        }
+    };
+
+
     const filteredBookings = bookingData.filter((booking) =>
         booking.fullName.toLowerCase().includes(searchQuery.toLowerCase())
     );
-
-    const formatDate = (dateString: string | undefined) => {
-        if (!dateString) return 'Date not available';
-        try {
-            return new Date(dateString).toLocaleDateString();
-        } catch (error) {
-            return 'Invalid date';
-        }
-    };
 
     if (isLoading) {
         return (
@@ -62,8 +76,18 @@ const Page = () => {
             <main className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center">
                 <div className="text-center">
                     <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
-                        <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        <svg
+                            className="w-8 h-8 text-red-500"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                            />
                         </svg>
                     </div>
                     <p className="text-white/60">{error}</p>
@@ -78,6 +102,47 @@ const Page = () => {
         );
     }
 
+
+    const openDeleteModal = (booking: Booking) => {
+        console.log("Delete id : ", booking.bookingId);
+        setSelectedBooking(booking);
+        setIsDeleteOpen(true);
+
+    };
+
+    const openEditModal = (booking: Booking) => {
+        setSelectedBooking(booking);
+        setEditForm({ fullName: booking.fullName, email: booking.email });
+        setIsEditOpen(true);
+    };
+
+    const handleEditSave = () => {
+        if (!selectedBooking) return;
+        setBookingData((prev) =>
+            prev.map((b) =>
+                b.bookingId === selectedBooking.bookingId
+                    ? { ...b, ...editForm }
+                    : b
+            )
+        );
+        setIsEditOpen(false);
+    };
+
+
+    const handleDelete = async () => {
+        const id = selectedBooking?.bookingId as number;
+        if (!id) return;
+
+        try {
+            await MovieService.deleteBooking(id);
+            setBookingData((prev) => prev.filter((b) => b.bookingId !== id));
+            setIsDeleteOpen(false);
+        } catch (error) {
+            console.error("Delete failed:", error);
+            // Optional: show error message to the user
+        }
+    };
+
     return (
         <main className="min-h-screen bg-[#0a0a0a] text-white">
             {/* Gradient Background */}
@@ -90,7 +155,7 @@ const Page = () => {
                     {/* Back Button */}
                     <div
                         className="inline-flex items-center mb-8 hover:opacity-80 transition-opacity cursor-pointer group"
-                        onClick={() => router.push('/')}
+                        onClick={() => router.push("/")}
                     >
                         <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mr-3 group-hover:-translate-x-1 transition-transform">
                             <svg
@@ -117,7 +182,7 @@ const Page = () => {
                             My Bookings {filteredBookings.length}
                         </h1>
 
-                        {/* Search and Filter Section */}
+                        {/* Search Section */}
                         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
                             <div className="relative flex-grow md:flex-grow-0">
                                 <input
@@ -126,8 +191,8 @@ const Page = () => {
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     className="w-full md:w-80 px-6 py-3.5 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl
-                                    focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20
-                                    placeholder-white/40 transition-all duration-300"
+                    focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20
+                    placeholder-white/40 transition-all duration-300"
                                 />
                                 <FaSearch className="absolute right-4 top-4 text-white/40" />
                             </div>
@@ -140,11 +205,25 @@ const Page = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredBookings.length > 0 ? (
                             filteredBookings.map((booking) => (
-                                <div key={booking.bookingId}
-                                    className="group bg-white/5 backdrop-blur-xl rounded-3xl overflow-hidden 
-                                    hover:transform hover:scale-[1.02] transition-all duration-300
-                                    border border-white/10 hover:border-white/20">
-
+                                <div
+                                    key={booking.bookingId}
+                                    className="group bg-white/5 backdrop-blur-xl rounded-3xl overflow-hidden hover:transform hover:scale-[1.02] transition-all duration-300 border border-white/10 hover:border-white/20 relative"
+                                >
+                                    {/* ── Action Buttons ── */}
+                                    <div className="absolute top-4 right-4 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button
+                                            onClick={() => openEditModal(booking)}
+                                            className="p-2 rounded-full bg-white/10 hover:bg-green-500/20"
+                                        >
+                                            <FaEdit className="w-4 h-4 text-green-400" />
+                                        </button>
+                                        <button
+                                            onClick={() => openDeleteModal(booking)}
+                                            className="p-2 rounded-full bg-white/10 hover:bg-red-500/20"
+                                        >
+                                            <FaTrashAlt className="w-4 h-4 text-red-400" />
+                                        </button>
+                                    </div>
 
                                     {/* Booking Content */}
                                     <div className="p-6">
@@ -164,7 +243,9 @@ const Page = () => {
                                                 </div>
                                             </div>
                                             <div className="bg-green-500/20 px-4 py-2 rounded-full">
-                                                <span className="text-green-400 font-medium">${booking.totalPrice}</span>
+                                                <span className="text-green-400 font-medium">
+                                                    ${booking.totalPrice}
+                                                </span>
                                             </div>
                                         </div>
 
@@ -172,15 +253,15 @@ const Page = () => {
                                         <div className="space-y-4">
                                             <div className="flex items-center text-white/80">
                                                 <FaUser className="w-5 h-5 mr-3 text-white/60" />
-                                                <span>{booking.fullName || 'Name not available'}</span>
+                                                <span>{booking.fullName || "Name not available"}</span>
                                             </div>
                                             <div className="flex items-center text-white/80">
                                                 <FaEnvelope className="w-5 h-5 mr-3 text-white/60" />
-                                                <span>{booking.email || 'Email not available'}</span>
+                                                <span>{booking.email || "Email not available"}</span>
                                             </div>
                                             <div className="flex items-center text-white/80">
                                                 <FaClock className="w-5 h-5 mr-3 text-white/60" />
-                                                <span>{booking.show.showTime || 'Time not available'}</span>
+                                                <span>{booking.show.showTime || "Time not available"}</span>
                                             </div>
                                         </div>
 
@@ -188,13 +269,16 @@ const Page = () => {
                                         <div className="mt-6 pt-6 border-t border-white/10">
                                             <div className="flex items-center justify-between mb-3">
                                                 <h4 className="text-white/60 text-sm">Seat Information</h4>
-                                                <span className="text-white/40 text-sm">{booking.seats.length || 0} seats</span>
+                                                <span className="text-white/40 text-sm">
+                                                    {booking.seats.length || 0} seats
+                                                </span>
                                             </div>
                                             <div className="flex flex-wrap gap-2">
                                                 {booking.seats?.map((seat) => (
-                                                    <div key={seat.seatId}
-                                                        className="bg-white/10 px-3 py-1.5 rounded-lg text-sm
-                                                        hover:bg-white/20 transition-colors cursor-default">
+                                                    <div
+                                                        key={seat.seatId}
+                                                        className="bg-white/10 px-3 py-1.5 rounded-lg text-sm hover:bg-white/20 transition-colors cursor-default"
+                                                    >
                                                         Row {seat.row} - Seat {seat.number}
                                                     </div>
                                                 ))}
@@ -208,14 +292,91 @@ const Page = () => {
                                 <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
                                     <FaSearch className="w-8 h-8 text-white/20" />
                                 </div>
-                                <p className="text-xl text-white/40 font-medium">No bookings found matching your search.</p>
+                                <p className="text-xl text-white/40 font-medium">
+                                    No bookings found matching your search.
+                                </p>
                             </div>
                         )}
                     </div>
                 </div>
             </div>
-        </main>
-    )
-}
 
-export default Page
+            {/* ───────────────── Delete Confirmation Modal ───────────────── */}
+            {isDeleteOpen && selectedBooking && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+                    <div className="bg-[#0a0a0a] rounded-2xl p-8 max-w-md w-full border border-white/10">
+                        <h2 className="text-xl font-semibold text-white/90 mb-4">Delete Booking</h2>
+                        <p className="text-white/70 mb-6">
+                            Are you sure you want to delete booking <span className="font-semibold">#{selectedBooking.bookingId}</span>? This action cannot be undone.
+                        </p>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                onClick={() => setIsDeleteOpen(false)}
+                                className="px-5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white/70"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleDelete}
+                                className="px-5 py-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-400"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ───────────────── Edit Booking Modal ───────────────── */}
+            {isEditOpen && selectedBooking && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 overflow-y-auto">
+                    <div className="bg-[#0a0a0a] rounded-2xl p-8 max-w-lg w-full border border-white/10">
+                        <h2 className="text-xl font-semibold text-white/90 mb-6">Edit Booking #{selectedBooking.bookingId}</h2>
+                        <div className="space-y-5">
+                            <div>
+                                <label className="block mb-2 text-white/70 text-sm">Full Name</label>
+                                <input
+                                    type="text"
+                                    className="w-full px-4 py-3 bg-white/5 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
+                                    value={editForm.fullName}
+                                    onChange={(e) =>
+                                        setEditForm((prev) => ({ ...prev, fullName: e.target.value }))
+                                    }
+                                />
+                            </div>
+                            <div>
+                                <label className="block mb-2 text-white/70 text-sm">Email</label>
+                                <input
+                                    type="email"
+                                    className="w-full px-4 py-3 bg-white/5 rounded-xl border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
+                                    value={editForm.email}
+                                    onChange={(e) =>
+                                        setEditForm((prev) => ({ ...prev, email: e.target.value }))
+                                    }
+                                />
+                            </div>
+                            {/* More editable fields (e.g., seats) could be added here */}
+                        </div>
+
+                        <div className="flex justify-end gap-3 mt-8">
+                            <button
+                                onClick={() => setIsEditOpen(false)}
+                                className="px-5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white/70"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleEditSave}
+                                className="px-5 py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 text-green-400"
+                            >
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </main>
+    );
+};
+
+export default Page;
