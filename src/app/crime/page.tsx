@@ -53,7 +53,7 @@ const Page = () => {
                     {/* Back Button */}
                     <div
                         className="inline-flex items-center mb-16 hover:opacity-80 transition-opacity cursor-pointer group"
-                        onClick={() => router.push('/home')}
+                        onClick={() => router.push('/')}
                     >
                         <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mr-3 group-hover:-translate-x-1 transition-transform">
                             <svg
