@@ -5,8 +5,11 @@ import {
   CastResponse,
   CategoryResponse,
   EditFormRequest,
+  LoginRequest,
+  LoginResponse,
   MovieResponse,
   NormalMovieResponse,
+  RegisterRequest,
   SeatRequest,
   SeatResponse,
   ShowRequest,
@@ -76,5 +79,13 @@ export const MovieService = {
     data: EditFormRequest
   ): Promise<BookingResponse> => {
     return await RestService.put(Path.booking.update(id), data);
+  },
+
+  AuthService: async (data: RegisterRequest): Promise<Response> => {
+    return await RestService.post(Path.auth.registerMovie(), data);
+  },
+
+  LoginService: async (data: LoginRequest): Promise<LoginResponse> => {
+    return await RestService.post(Path.auth.login(), data);
   },
 };

@@ -127,3 +127,26 @@ export interface EditFormRequest {
   showId: number;
   seatIds: number[];
 }
+
+export interface RegisterRequest {
+  fullName: string;
+  email: string;
+  password: string;
+  profilePicture?: string;
+}
+
+export interface Response {
+  payload: RegisterRequest;
+  status: string;
+  message: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  payload: LoginRequest[];
+  status: string;
+}

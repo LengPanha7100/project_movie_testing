@@ -54,6 +54,16 @@ const Path = {
       return `http://34.87.39.167:9082/api/v1/movies/${id}/favorite?status=${status}`;
     },
   },
+
+  auth: {
+    registerMovie: (): string => {
+      return `http://34.87.39.167:9083/api/v1/auths/register`;
+    },
+
+    login: (): string => {
+      return `http://34.87.39.167:9083/api/v1/auths/login`;
+    },
+  },
 };
 
 export default Path;
