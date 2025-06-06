@@ -146,7 +146,10 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface NormalLoginResponse {
+  token: string;
+}
 export interface LoginResponse {
-  payload: LoginRequest[];
+  payload: NormalLoginResponse;
   status: string;
 }

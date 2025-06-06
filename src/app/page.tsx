@@ -17,8 +17,8 @@ const page = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const [dataRegister, setDataRegister] = useState<Response | undefined>();
-  const [dataLogin, setDataLogin] = useState<LoginResponse | undefined>();
+  const [, setDataRegister] = useState<Response | undefined>();
+  const [, setDataLogin] = useState<LoginResponse | undefined>();
 
   const createRegister = async () => {
     const data: RegisterRequest = {
@@ -55,7 +55,8 @@ const page = () => {
       const res = await MovieService.LoginService(data);
       setDataLogin(res);
       setShowAuthModal(false);
-      router.push('/dashboard');
+      sessionStorage.setItem("token", res.payload.token);
+      router.push('/home');
     } catch (err) {
       console.error("Login failed", err);
       setAuthError("Invalid credentials. Please try again.");
