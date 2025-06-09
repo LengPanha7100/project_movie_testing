@@ -1,12 +1,13 @@
 'use client';
 import { MovieService } from '@/service/MovieService';
 import { LoginRequest, LoginResponse, RegisterRequest } from '@/types/Movie';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-// import { toast } from 'sonner';
+import { toast } from 'sonner';
 const page = () => {
-  const [showAuthModal, setShowAuthModal] = useState(true); // Show modal initially if desired
-  const [isLogin, setIsLogin] = useState(false); // 🔄 Show Register first
+  const [showAuthModal, setShowAuthModal] = useState(true);
+  const [isLogin, setIsLogin] = useState(true);
   const [authForm, setAuthForm] = useState({
     email: '',
     password: '',
@@ -32,8 +33,8 @@ const page = () => {
       if (response !== null) {
         setDataRegister(response);
         console.log("Register successfully", response);
-        setAuthError('Registration successful! Please login.');
-        // toast.success('Registration successful! Please login.');
+        // setAuthError('Registration successful! Please login.');
+        toast.success('Registration successful! Please login.');
         setIsLogin(true);
         setAuthForm({ email: '', password: '', name: '' })
       } else {
@@ -42,26 +43,31 @@ const page = () => {
       }
     } catch (error) {
       console.log("Register failed", error);
-      // setAuthError("An error occurred during registration.");
+      setAuthError("An error occurred during registration.");
     }
   };
 
   const loginUser = async () => {
     const data: LoginRequest = {
       email: authForm.email,
-      password: authForm.password
+      password: authForm.password,
     };
     try {
-      const res = await MovieService.LoginService(data);
-      setDataLogin(res);
+      const res = await signIn("credentials", {
+        redirect: false,
+        ...data,
+      });
+
+      if (res?.status == 200) {
+        router.push("/home");
+      }
       setShowAuthModal(false);
-      sessionStorage.setItem("token", res.payload.token);
-      router.push('/home');
     } catch (err) {
       console.error("Login failed", err);
       setAuthError("Invalid credentials. Please try again.");
     }
   };
+
 
   const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
