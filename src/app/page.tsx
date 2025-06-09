@@ -3,9 +3,8 @@ import { MovieService } from '@/service/MovieService';
 import { LoginRequest, LoginResponse, RegisterRequest } from '@/types/Movie';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-
+// import { toast } from 'sonner';
 const page = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(true); // Show modal initially if desired
   const [isLogin, setIsLogin] = useState(false); // 🔄 Show Register first
   const [authForm, setAuthForm] = useState({
@@ -34,6 +33,7 @@ const page = () => {
         setDataRegister(response);
         console.log("Register successfully", response);
         setAuthError('Registration successful! Please login.');
+        // toast.success('Registration successful! Please login.');
         setIsLogin(true);
         setAuthForm({ email: '', password: '', name: '' })
       } else {
@@ -42,7 +42,7 @@ const page = () => {
       }
     } catch (error) {
       console.log("Register failed", error);
-      setAuthError("An error occurred during registration.");
+      // setAuthError("An error occurred during registration.");
     }
   };
 
@@ -87,7 +87,7 @@ const page = () => {
       {showAuthModal && (
         <div
           className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center"
-          onClick={() => setShowAuthModal(false)}
+        // onClick={() => setShowAuthModal(false)}
         >
           <div
             className="bg-white/10 backdrop-blur-lg rounded-2xl w-full max-w-md p-8"
@@ -118,7 +118,9 @@ const page = () => {
                     type="text"
                     value={authForm.name}
                     onChange={(e) => setAuthForm({ ...authForm, name: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${authForm.name ?
+                      'bg-white text-black' : 'bg-white/5 text-white'
+                      }`}
                     placeholder="Enter your name"
                     required={!isLogin}
                   />
@@ -133,7 +135,9 @@ const page = () => {
                   type="email"
                   value={authForm.email}
                   onChange={(e) => setAuthForm({ ...authForm, email: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${authForm.email ?
+                    'bg-white text-black' : 'bg-white/5 text-white'
+                    }`}
                   placeholder="Enter your email"
                   required
                 />
@@ -147,7 +151,9 @@ const page = () => {
                   type="password"
                   value={authForm.password}
                   onChange={(e) => setAuthForm({ ...authForm, password: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${authForm.password ?
+                    'bg-white text-black' : 'bg-white/5 text-white'
+                    }`}
                   placeholder="Enter your password"
                   required
                 />
