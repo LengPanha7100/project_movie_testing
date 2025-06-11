@@ -31,7 +31,7 @@ const Page = () => {
 
     console.log(filterDataMovie)
 
-    const [showAll, setShowAll] = useState<string | null>(null);
+    const [showAll] = useState<string | null>(null);
 
     const toggleFavorite = (movieId: number) => {
         setMovieData((prevList) =>

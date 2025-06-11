@@ -19,8 +19,8 @@ const TICKET_PRICE = 5;
 export default function BookingPage() {
     const param = useParams();
     const router = useRouter();
-    const [showId, setShowId] = useState<Number>(0);
-    const [seatIds, setSeatIds] = useState<Array<Number>>([]);
+    const [showId, setShowId] = useState<number>(0);
+    const [seatIds, setSeatIds] = useState<Array<number>>([]);
     const [formData, setFormData] = useState({
         showDate: "",
         showTime: "",

@@ -1,11 +1,11 @@
 'use client';
 import { MovieService } from '@/service/MovieService';
-import { LoginRequest, LoginResponse, RegisterRequest } from '@/types/Movie';
+import { LoginRequest, RegisterRequest } from '@/types/Movie';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-const page = () => {
+const Page = () => {
   const [showAuthModal, setShowAuthModal] = useState(true);
   const [isLogin, setIsLogin] = useState(true);
   const [authForm, setAuthForm] = useState({
@@ -18,7 +18,7 @@ const page = () => {
   const router = useRouter();
 
   const [, setDataRegister] = useState<Response | undefined>();
-  const [, setDataLogin] = useState<LoginResponse | undefined>();
+  // const [, setDataLogin] = useState<LoginResponse | undefined>();
 
   const createRegister = async () => {
     const data: RegisterRequest = {
@@ -62,9 +62,8 @@ const page = () => {
         router.push("/home");
       }
       setShowAuthModal(false);
-    } catch (err) {
-      console.error("Login failed", err);
-      setAuthError("Invalid credentials. Please try again.");
+    } catch {
+      setAuthError(isLogin ? 'Invalid credentials' : 'Registration failed');
     }
   };
 
@@ -80,7 +79,7 @@ const page = () => {
       } else {
         await createRegister();
       }
-    } catch (err) {
+    } catch {
       setAuthError(isLogin ? 'Invalid credentials' : 'Registration failed');
     } finally {
       setIsLoading(false);
@@ -202,4 +201,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

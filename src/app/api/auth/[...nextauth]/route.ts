@@ -1,6 +1,6 @@
 import { MovieService } from "@/service/MovieService";
 import { LoginRequest } from "@/types/Movie";
-import NextAuth, { AuthOptions } from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";  
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: AuthOptions = {
@@ -11,6 +11,7 @@ export const authOptions: AuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       async authorize(credentials): Promise<any | null> {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Missing email or password.");
@@ -47,7 +48,7 @@ export const authOptions: AuthOptions = {
     },
 
     async session({ session, token }) {
-      session.token = token.token as any;
+      session.token = token.token as string;
       return session;
     },
   },

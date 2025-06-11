@@ -1,6 +1,6 @@
 'use client';
 import { BookingResponse, CategoryResponse, Movie, MovieResponse } from '@/types/Movie';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import {
     FaChevronLeft,
@@ -23,9 +23,9 @@ const HomeComponent: React.FC<LandingPageProps> = ({ responseMovieAll, responseC
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [showAll, setShowAll] = useState<boolean>(false);
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const bookingCountParam = searchParams.get('bookingCount');
-    const bookingCount = bookingCountParam ? Number(bookingCountParam) : 0;
+    // const searchParams = useSearchParams();
+    // const bookingCountParam = searchParams.get('bookingCount');
+    // const bookingCount = bookingCountParam ? Number(bookingCountParam) : 0;
 
     const handleCategoryClick = (name: string) => {
         const path = name.toLowerCase().replace(/\s+/g, '-');

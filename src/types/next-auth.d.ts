@@ -8,4 +8,9 @@ declare module "next-auth" {
       role: string;
     } & DefaultSession["user"];
   }
+  interface User extends DefaultUser {
+    id: string;
+    role: string;
+    payload: LoginResponse;
+  }
 }
