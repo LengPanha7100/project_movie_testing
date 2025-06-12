@@ -61,8 +61,8 @@ const Page = () => {
         router.push("/home");
       }
       setShowAuthModal(false);
-    } catch (err) {
-      console.error("Login failed", err);
+    } catch (error) {
+      console.error("Login failed", error);
       setAuthError("Invalid credentials. Please try again.");
     }
   };
