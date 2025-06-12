@@ -31,16 +31,6 @@ const Page = () => {
         movie.category.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
     const [showAll, setShowAll] = useState(false);
-
-    const toggleFavorite = (movieId: number) => {
-        setMovieData((prevList) =>
-            prevList.map((movie) =>
-                movie.movieId === movieId
-                    ? { ...movie, isFavorite: !movie.isFavorite }
-                    : movie
-            )
-        );
-    };
     return (
         <main className="min-h-screen bg-[#0a0a0a] text-white">
             {/* Gradient Background */}

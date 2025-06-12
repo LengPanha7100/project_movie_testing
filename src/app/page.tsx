@@ -1,6 +1,6 @@
 'use client';
 import { MovieService } from '@/service/MovieService';
-import { LoginRequest, LoginResponse, RegisterRequest } from '@/types/Movie';
+import { LoginRequest, RegisterRequest } from '@/types/Movie';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -18,7 +18,6 @@ const page = () => {
   const router = useRouter();
 
   const [, setDataRegister] = useState<Response | undefined>();
-  const [, setDataLogin] = useState<LoginResponse | undefined>();
 
   const createRegister = async () => {
     const data: RegisterRequest = {
