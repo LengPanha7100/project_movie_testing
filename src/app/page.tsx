@@ -79,7 +79,7 @@ const Page = () => {
       } else {
         await createRegister();
       }
-    } catch (err) {
+    } catch {
       setAuthError(isLogin ? 'Invalid credentials' : 'Registration failed');
     } finally {
       setIsLoading(false);
