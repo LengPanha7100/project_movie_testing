@@ -1,6 +1,6 @@
 'use client'
 import { MovieService } from "@/service/MovieService";
-import { Movie, MovieRequest } from "@/types/Movie";
+import { Category, Movie, MovieRequest } from "@/types/Movie";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaHeart, FaRegHeart, FaSearch, FaStar, FaTicketAlt, FaTimes } from "react-icons/fa";
@@ -9,6 +9,23 @@ const Page = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const router = useRouter();
     const [movieData, setMovieData] = useState<Movie[]>([]);
+    const [categoryData, setCategories] = useState<Category[]>([]);
+    const handleCategories = async () => {
+        try {
+            const res = await MovieService.getCatgoryAll();
+            if (res != null) {
+                setCategories(res.payload);
+            }
+        } catch (error) {
+            console.log("error data categories : ", error);
+        }
+    }
+
+    useEffect(() => {
+        handleCategories();
+    }, [])
+
+    console.log("data response categories : ", categoryData);
 
     const dataMovie = async () => {
         try {
@@ -43,8 +60,23 @@ const Page = () => {
     });
 
     const handleCreateMovie = async () => {
+        const data1Movie: MovieRequest = {
+            title: newMovie.title,
+            year: newMovie.year,
+            duration: newMovie.duration,
+            rating: newMovie.rating,
+            overview: newMovie.overview,
+            directorName: newMovie.directorName,
+            poster: newMovie.poster,
+            thriller: newMovie.thriller,
+            category: {
+                categoryId: newMovie.category.categoryId,
+                name: ""
+            },
+            castMembers: []
+        }
         try {
-            const response = await MovieService.createMovie(newMovie);
+            const response = await MovieService.createMovie(data1Movie);
             if (response) {
                 setShowCreateModal(false);
                 dataMovie();
@@ -251,36 +283,70 @@ const Page = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium mb-2">Category ID</label>
-                                    <input
-                                        type="number"
-                                        value={newMovie.category.categoryId}
-                                        onChange={(e) => setNewMovie({
-                                            ...newMovie,
-                                            category: {
-                                                ...newMovie.category,
-                                                categoryId: parseInt(e.target.value)
-                                            }
-                                        })}
-                                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/20"
-                                    />
+                                    <label className="block text-sm font-medium mb-2">Category</label>
+                                    <div className="relative">
+                                        <select
+                                            value={newMovie.category.categoryId}
+                                            onChange={(e) => {
+                                                const selectedCategory = categoryData.find(
+                                                    cat => cat.categoryId === parseInt(e.target.value)
+                                                );
+                                                setNewMovie({
+                                                    ...newMovie,
+                                                    category: {
+                                                        categoryId: parseInt(e.target.value),
+                                                        name: selectedCategory?.name || ""
+                                                    }
+                                                });
+                                            }}
+                                            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg 
+                                            focus:outline-none focus:border-white/20 appearance-none cursor-pointer
+                                            hover:bg-white/10 transition-all duration-200"
+                                        >
+                                            <option value="" className="bg-[#1a1a1a] text-white/60">Select a category</option>
+                                            {categoryData.map((category) => (
+                                                <option
+                                                    key={category.categoryId}
+                                                    value={category.categoryId}
+                                                    className="bg-[#1a1a1a] text-white"
+                                                >
+                                                    {category.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                                            <svg
+                                                className="w-4 h-4 text-white/60"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M19 9l-7 7-7-7"
+                                                />
+                                            </svg>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
 
-                                <div className="flex justify-end space-x-4 mt-6">
-                                    <button
-                                        onClick={() => setShowCreateModal(false)}
-                                        className="px-6 py-2.5 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        onClick={handleCreateMovie}
-                                        className="px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 
+                            <div className="flex justify-end space-x-4 mt-6">
+                                <button
+                                    onClick={() => setShowCreateModal(false)}
+                                    className="px-6 py-2.5 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleCreateMovie}
+                                    className="px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 
                                     rounded-lg transition-all duration-300 cursor-pointer shadow-lg hover:shadow-red-500/20"
-                                    >
-                                        Create Movie
-                                    </button>
-                                </div>
+                                >
+                                    Create Movie
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -359,7 +425,7 @@ const Page = () => {
                     </div>
                 </div>
             </div>
-        </main>
+        </main >
     )
 }
 
