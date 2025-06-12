@@ -5,7 +5,7 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-const page = () => {
+const Page = () => {
   const [showAuthModal, setShowAuthModal] = useState(true);
   const [isLogin, setIsLogin] = useState(true);
   const [authForm, setAuthForm] = useState({
@@ -201,4 +201,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
