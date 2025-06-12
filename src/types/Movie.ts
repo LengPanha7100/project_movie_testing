@@ -12,6 +12,25 @@ export interface Movie {
   category: Category;
   castMembers: CastMember[];
 }
+
+export interface MovieRequest {
+  title: string;
+  year: number;
+  duration: number;
+  rating: number;
+  overview: string;
+  directorName: string;
+  poster: string;
+  thriller: string;
+  category: {
+    categoryId: number;
+    name: string;
+  };
+  castMembers: {
+    castId: number;
+    name: string;
+  }[];
+}
 export interface Category {
   categoryId: number;
   name: string;

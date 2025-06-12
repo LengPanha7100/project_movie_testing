@@ -7,6 +7,7 @@ import {
   EditFormRequest,
   LoginRequest,
   LoginResponse,
+  MovieRequest,
   MovieResponse,
   NormalMovieResponse,
   RegisterRequest,
@@ -87,5 +88,9 @@ export const MovieService = {
 
   LoginService: async (data: LoginRequest): Promise<LoginResponse> => {
     return await RestService.post(Path.auth.login(), data);
+  },
+
+  createMovie: async (data: MovieRequest): Promise<MovieRequest> => {
+    return await RestService.post(Path.movie.create(), data);
   },
 };

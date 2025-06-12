@@ -9,6 +9,9 @@ const Path = {
     getById: (id: number): string => {
       return `/movies/${id}`;
     },
+    create: (): string => {
+      return "/api/v1/movies";
+    },
   },
   category: {
     list: (page: number, size: number): string => {

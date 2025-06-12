@@ -1,9 +1,10 @@
 'use client'
 import { MovieService } from "@/service/MovieService";
-import { Movie } from "@/types/Movie";
+import { Movie, MovieRequest } from "@/types/Movie";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaFilter, FaHeart, FaRegHeart, FaSearch, FaStar } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaSearch, FaStar, FaTicketAlt, FaTimes } from "react-icons/fa";
+
 const Page = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const router = useRouter();
@@ -12,7 +13,6 @@ const Page = () => {
     const dataMovie = async () => {
         try {
             const responseMovie = await MovieService.getMovieAll();
-            console.log(responseMovie.payload);
             if (responseMovie && responseMovie.payload) {
                 setMovieData(responseMovie.payload)
             }
@@ -25,13 +25,56 @@ const Page = () => {
         dataMovie();
     }, []);
 
-    console.log("Data Action ", movieData);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [newMovie, setNewMovie] = useState<MovieRequest>({
+        title: "",
+        year: new Date().getFullYear(),
+        duration: 0,
+        rating: 0,
+        overview: "",
+        directorName: "",
+        poster: "",
+        thriller: "",
+        category: {
+            categoryId: 0,
+            name: ""
+        },
+        castMembers: []
+    });
+
+    const handleCreateMovie = async () => {
+        try {
+            const response = await MovieService.createMovie(newMovie);
+            if (response) {
+                setShowCreateModal(false);
+                dataMovie();
+                setNewMovie({
+                    title: "",
+                    year: new Date().getFullYear(),
+                    duration: 0,
+                    rating: 0,
+                    overview: "",
+                    directorName: "",
+                    poster: "",
+                    thriller: "",
+                    category: {
+                        categoryId: 0,
+                        name: ""
+                    },
+                    castMembers: []
+                });
+            }
+        } catch (error) {
+            console.error("Error creating movie:", error);
+        }
+    };
+
     const filterDataMovie = movieData.filter((movie) =>
         movie.category.name &&
         movie.category.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    const [showAll, setShowAll] = useState(false);
+    );
 
+    const [showAll, setShowAll] = useState(false);
 
     const toggleFavorite = (movieId: number) => {
         setMovieData((prevList) =>
@@ -42,6 +85,7 @@ const Page = () => {
             )
         );
     };
+
     return (
         <main className="min-h-screen bg-[#0a0a0a] text-white">
             {/* Gradient Background */}
@@ -95,16 +139,152 @@ const Page = () => {
                                 />
                                 <FaSearch className="absolute right-4 top-4 text-white/40" />
                             </div>
-                            <button className="flex items-center justify-center px-6 py-3.5 bg-white/5 backdrop-blur-xl 
-                                border border-white/10 rounded-2xl hover:bg-white/10 transition-all duration-300
-                                focus:outline-none focus:ring-1 focus:ring-white/20">
-                                <FaFilter className="mr-2 text-white/80" />
-                                <span className="text-white/80">Filter</span>
 
+                            <button className="flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors cursor-pointer duration-200"
+                                onClick={() => setShowCreateModal(true)}
+                            >
+                                <FaTicketAlt className="mr-2" />
+                                CREATE
                             </button>
                         </div>
                     </div>
                 </div>
+
+                {/* Create Movie Modal */}
+                {showCreateModal && (
+                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+                        <div className="bg-[#1a1a1a] rounded-2xl p-8 w-full max-w-2xl mx-4">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-2xl font-bold">Create New Movie</h2>
+                                <button
+                                    onClick={() => setShowCreateModal(false)}
+                                    className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                                >
+                                    <FaTimes className="w-5 h-5" />
+                                </button>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2">Title</label>
+                                        <input
+                                            type="text"
+                                            value={newMovie.title}
+                                            onChange={(e) => setNewMovie({ ...newMovie, title: e.target.value })}
+                                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/20"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2">Year</label>
+                                        <input
+                                            type="number"
+                                            value={newMovie.year}
+                                            onChange={(e) => setNewMovie({ ...newMovie, year: parseInt(e.target.value) })}
+                                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/20"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2">Duration (minutes)</label>
+                                        <input
+                                            type="number"
+                                            value={isNaN(newMovie.duration) ? '' : newMovie.duration}
+                                            onChange={(e) => setNewMovie({ ...newMovie, duration: e.target.value === '' ? 0 : Number(e.target.value) })}
+                                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/20"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2">Rating</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="10"
+                                            step="0.1"
+                                            value={newMovie.rating}
+                                            onChange={(e) => setNewMovie({ ...newMovie, rating: parseFloat(e.target.value) })}
+                                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/20"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Overview</label>
+                                    <textarea
+                                        value={newMovie.overview}
+                                        onChange={(e) => setNewMovie({ ...newMovie, overview: e.target.value })}
+                                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/20 h-24"
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2">Director Name</label>
+                                        <input
+                                            type="text"
+                                            value={newMovie.directorName}
+                                            onChange={(e) => setNewMovie({ ...newMovie, directorName: e.target.value })}
+                                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/20"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2">Poster URL</label>
+                                        <input
+                                            type="text"
+                                            value={newMovie.poster}
+                                            onChange={(e) => setNewMovie({ ...newMovie, poster: e.target.value })}
+                                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/20"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Thriller URL</label>
+                                    <input
+                                        type="text"
+                                        value={newMovie.thriller}
+                                        onChange={(e) => setNewMovie({ ...newMovie, thriller: e.target.value })}
+                                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/20"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Category ID</label>
+                                    <input
+                                        type="number"
+                                        value={newMovie.category.categoryId}
+                                        onChange={(e) => setNewMovie({
+                                            ...newMovie,
+                                            category: {
+                                                ...newMovie.category,
+                                                categoryId: parseInt(e.target.value)
+                                            }
+                                        })}
+                                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/20"
+                                    />
+                                </div>
+
+                                <div className="flex justify-end space-x-4 mt-6">
+                                    <button
+                                        onClick={() => setShowCreateModal(false)}
+                                        className="px-6 py-2.5 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleCreateMovie}
+                                        className="px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 
+                                    rounded-lg transition-all duration-300 cursor-pointer shadow-lg hover:shadow-red-500/20"
+                                    >
+                                        Create Movie
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Movies Grid */}
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
@@ -120,7 +300,6 @@ const Page = () => {
                                         <img
                                             src={movie.poster}
                                             alt={movie.title}
-                                            // onClick={() => router.push(`/detail/${movie.id}`)}
                                             className="w-full h-[300px] object-cover brightness-90 group-hover:brightness-100 transition-all duration-300"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
@@ -148,16 +327,16 @@ const Page = () => {
                                         <div className="flex items-center text-white/60 text-sm mb-4 font-medium">
                                             <span>{movie.year}</span>
                                             <span className="mx-2">•</span>
-                                            <span>{movie.duration}</span>
+                                            <span>{movie.duration} min</span>
                                             <span className="mx-2">•</span>
-                                            {/* <span>{movie.genre}</span> */}
+                                            <span>{movie.category.name}</span>
                                         </div>
                                         <div>
                                             <p className={`text-white/50 text-sm leading-relaxed ${showAll ? "" : "line-clamp-2"}`}>
                                                 {movie.overview}
                                             </p>
 
-                                            {movie.overview.length > 100 && ( // only show button if description is long
+                                            {movie.overview.length > 100 && (
                                                 <button
                                                     onClick={() => setShowAll(!showAll)}
                                                     className="mt-2 text-blue-400 hover:underline text-sm"
