@@ -1,5 +1,6 @@
 // lib/axios-instance.ts
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
+import { authOptions } from "@/lib/auth";
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import { getServerSession } from "next-auth";
 import { getSession } from "next-auth/react";
