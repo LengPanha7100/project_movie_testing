@@ -22,14 +22,8 @@ export interface MovieRequest {
   directorName: string;
   poster: string;
   thriller: string;
-  category: {
-    categoryId: number;
-    name: string;
-  };
-  castMembers: {
-    castId: number;
-    name: string;
-  }[];
+  categoryId: number;
+  castMemberIds: number[];
 }
 export interface Category {
   categoryId: number;
