@@ -13,6 +13,9 @@ const Path = {
       return "/movies";
     },
     remove: (id: number): string => `/movies/${id}`,
+    update: (id: number): string => {
+      return `/movies/${id}`;
+    },
   },
   category: {
     list: (page: number, size: number): string => {
@@ -53,8 +56,8 @@ const Path = {
   },
 
   favorites: {
-    update: (id: number, status: boolean): string => {
-      return `/movies/${id}/favorite?status=${status}`;
+    create: (id: number): string => {
+      return `movies/${id}/favorite`;
     },
   },
 

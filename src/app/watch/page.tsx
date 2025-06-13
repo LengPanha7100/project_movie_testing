@@ -109,13 +109,10 @@ const Page = () => {
             console.error("Error creating movie:", error);
         }
     };
-
     const filterDataMovie = movieData.filter((movie) =>
-        movie.category.name &&
-        movie.category.name.toLowerCase().includes(searchQuery.toLowerCase())
+        movie?.title.toLowerCase().includes(searchQuery.trim().toLowerCase())
+
     );
-
-
 
     const toggleFavorite = (movieId: number) => {
         setMovieData((prevList) =>
@@ -142,7 +139,6 @@ const Page = () => {
             console.error("Error deleting movie:", error);
         }
     };
-
 
     return (
         <main className="min-h-screen bg-[#0a0a0a] text-white">
@@ -203,6 +199,13 @@ const Page = () => {
                             >
                                 <FaTicketAlt className="mr-2" />
                                 CREATE
+                            </button>
+
+                            <button className="flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors cursor-pointer duration-200"
+                                onClick={() => setShowCreateModal(true)}
+                            >
+                                <FaTicketAlt className="mr-2" />
+                                UPDATE
                             </button>
                         </div>
                     </div>

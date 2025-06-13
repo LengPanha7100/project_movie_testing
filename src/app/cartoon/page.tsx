@@ -25,10 +25,11 @@ const Page = () => {
         dataMovie();
     }, []);
     const filterDataMovie = movieData.filter((movie) =>
-        movie.category.name === "comedy" &&
+        movie.category.name === "Cartoon" &&
         movie.category.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
     const [showAll, setShowAll] = useState(false);
+
 
     const toggleFavorite = (movieId: number) => {
         setMovieData((prevList) =>
@@ -75,7 +76,7 @@ const Page = () => {
                     {/* Header Content */}
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-8 md:space-y-0 mb-16">
                         <h1 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/70">
-                            Comedy Movies
+                            Drama Movies
                         </h1>
 
                         {/* Search and Filter Section */}
@@ -114,8 +115,6 @@ const Page = () => {
                                     border border-white/10 hover:border-white/20 cursor-pointer">
                                     <div className="relative" onClick={() => router.push(`/detail/${movie.movieId}`)}>
                                         <img
-                                            width={30}
-                                            height={30}
                                             src={movie.poster}
                                             alt={movie.title}
                                             className="w-full h-[300px] object-cover brightness-90 group-hover:brightness-100 transition-all duration-300"
@@ -126,7 +125,7 @@ const Page = () => {
                                             transition-all duration-300 transform hover:scale-110"
                                             onClick={(e) => {
                                                 e.stopPropagation()
-                                                toggleFavorite(movie.movieId)
+                                                toggleFavorite(movie.movieId);
                                             }}
                                         >
                                             {movie.isFavorite ? (
@@ -149,7 +148,7 @@ const Page = () => {
                                             <span className="mx-2">•</span>
                                             <span>{movie.duration}</span>
                                             <span className="mx-2">•</span>
-                                            {/* <span className="text-red-400/90">{movie.genre}</span> */}
+                                            {/* <span>{movie.genre}</span> */}
                                         </div>
                                         <div>
                                             <p className={`text-white/50 text-sm leading-relaxed ${showAll ? "" : "line-clamp-2"}`}>

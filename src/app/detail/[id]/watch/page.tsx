@@ -4,6 +4,7 @@ import { Movie } from '@/types/Movie';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { FaArrowLeft, FaStar } from 'react-icons/fa';
+import YouTube from 'react-youtube';
 
 const WatchPage = () => {
     const router = useRouter();
@@ -46,6 +47,17 @@ const WatchPage = () => {
 
     const movie = watches.find((m) => m.movieId === movieId);
 
+    // Function to extract YouTube video ID
+    const getYouTubeId = (url: string) => {
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    };
+
+    // Function to check if URL is YouTube
+    const isYouTubeUrl = (url: string) => {
+        return url.includes('youtube.com') || url.includes('youtu.be');
+    };
 
     const handleVideo = useCallback(() => {
         setIsWatching(true);
@@ -82,6 +94,22 @@ const WatchPage = () => {
             }
         }
         setVideoError(errorMessage);
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const onPlayerError = (event: any) => {
+        console.error("YouTube player error:", event);
+        setVideoError("Failed to load YouTube video");
+    };
+
+    const opts = {
+        height: '100%',
+        width: '100%',
+        playerVars: {
+            autoplay: 1,
+            modestbranding: 1,
+            rel: 0,
+        },
     };
 
     if (isLoading) {
@@ -146,15 +174,38 @@ const WatchPage = () => {
                         <div className="w-full h-full bg-gray-800 flex items-center justify-center">
                             {movie.thriller ? (
                                 <>
-                                    <video
-                                        controls
-                                        autoPlay
-                                        className="w-full h-full object-contain"
-                                        src={movie.thriller}
-                                        onError={handleVideoError}
-                                    >
-                                        Your browser does not support the video tag.
-                                    </video>
+                                    {isYouTubeUrl(movie.thriller) ? (
+                                        <div className="w-full h-full">
+                                            {getYouTubeId(movie.thriller) ? (
+                                                <YouTube
+                                                    videoId={getYouTubeId(movie.thriller) || ''}
+                                                    opts={opts}
+                                                    onError={onPlayerError}
+                                                    className="w-full h-full"
+                                                />
+                                            ) : (
+                                                <div className="text-center">
+                                                    <p className="text-white/60 mb-4">Invalid YouTube URL</p>
+                                                    <button
+                                                        onClick={() => setIsWatching(false)}
+                                                        className="text-white/60 hover:text-white transition-colors"
+                                                    >
+                                                        Go back
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <video
+                                            controls
+                                            autoPlay
+                                            className="w-full h-full object-contain"
+                                            src={movie.thriller}
+                                            onError={handleVideoError}
+                                        >
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    )}
                                     {videoError && (
                                         <div className="absolute inset-0 flex items-center justify-center bg-black/80">
                                             <div className="text-center">

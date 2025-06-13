@@ -794,6 +794,13 @@
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-19.1.5.tgz#cdfe2c663742887372f54804b16e8dbc26bd794a"
   integrity sha512-CMCjrWucUBZvohgZxkjd6S9h0nZxXjzus6yDfUb+xLxYM7VvjKNH1tQrE9GWLql1XoOP4/Ds3bwFqShHUYraGg==
 
+"@types/react-youtube@^7.10.0":
+  version "7.10.0"
+  resolved "https://registry.yarnpkg.com/@types/react-youtube/-/react-youtube-7.10.0.tgz#fbe52378044aee4804e814769c314a4a159687df"
+  integrity sha512-RtEyYn9kze525y1DIpNByvKCj2mwqAuPIAZx+HVJMsK7cXIWbOLemYNsBHSInMhjeGRiKDEz4pIgLX1mAGbDqQ==
+  dependencies:
+    react-youtube "*"
+
 "@types/react@^19.1.4":
   version "19.1.6"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-19.1.6.tgz#dee39f3e1e9a7d693f156a5840570b6d57f325ea"

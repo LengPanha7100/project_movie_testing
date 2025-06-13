@@ -84,7 +84,6 @@ const HomeComponent: React.FC<LandingPageProps> = ({ responseMovieAll, responseC
                     <span>{movie.year}</span>
                     <span className="mx-2">•</span>
                     <span>{movie.duration}</span>
-                    <span className="mx-2">•</span>
                     {/* <span>{movie.genre}</span> */}
                 </div>
                 <p className="text-gray-300 text-sm leading-relaxed">{movie.overview}</p>

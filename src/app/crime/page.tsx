@@ -101,11 +101,10 @@ const Page = () => {
                         {filterDataMovie.length > 0 ? (
                             filterDataMovie.map((movie: Movie) => (
                                 <div key={movie.movieId}
-                                    onClick={() => router.push(`/detail/${movie.movieId}`)}
                                     className="group bg-white/5 backdrop-blur-xl rounded-3xl overflow-hidden 
                                     hover:transform hover:scale-[1.02] transition-all duration-300
                                     border border-white/10 hover:border-white/20 cursor-pointer">
-                                    <div className="relative">
+                                    <div className="relative" onClick={() => router.push(`/detail/${movie.movieId}`)}>
                                         <img
                                             src={movie.poster}
                                             alt={movie.title}

@@ -36,7 +36,6 @@ export default function FavoritesPage() {
         }
     }
 
-    console.log("frfref", movieData);
     useEffect(() => {
         dataMovie();
     }, []);

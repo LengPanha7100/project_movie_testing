@@ -58,11 +58,8 @@ export const MovieService = {
     return await RestService.post(Path.booking.register(), data);
   },
 
-  FavoritesUpdate: async (
-    id: number,
-    status: boolean
-  ): Promise<MovieResponse> => {
-    return await RestService.patch(Path.favorites.update(id, status));
+  toggleFavorite: async (id: number): Promise<MovieResponse> => {
+    return await RestService.post(Path.favorites.create(id));
   },
 
   getAllBooking: async (): Promise<BookingResponse> => {
@@ -95,5 +92,12 @@ export const MovieService = {
   },
   removeMovie: async (id: number): Promise<MovieResponse> => {
     return await RestService.delete(Path.movie.remove(id));
+  },
+
+  updateMovie: async (
+    id: number,
+    data: MovieRequest
+  ): Promise<MovieResponse> => {
+    return await RestService.put(Path.movie.update(id), data);
   },
 };
