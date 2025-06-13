@@ -12,6 +12,7 @@ const Path = {
     create: (): string => {
       return "/api/v1/movies";
     },
+    remove: (id: number): string => `/api/v1/movies/${id}`,
   },
   category: {
     list: (page: number, size: number): string => {

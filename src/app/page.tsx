@@ -1,6 +1,7 @@
 'use client';
 import { MovieService } from '@/service/MovieService';
 import { LoginRequest, RegisterRequest } from '@/types/Movie';
+import { Eye, EyeOff } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -85,6 +86,7 @@ const Page = () => {
       setIsLoading(false);
     }
   };
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div>
@@ -152,16 +154,27 @@ const Page = () => {
                 <label className="block text-sm font-medium text-white/80 mb-2">
                   Password
                 </label>
-                <input
-                  type="password"
-                  value={authForm.password}
-                  onChange={(e) => setAuthForm({ ...authForm, password: e.target.value })}
-                  className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${authForm.password ?
-                    'bg-white text-black' : 'bg-white/5 text-white'
-                    }`}
-                  placeholder="Enter your password"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={authForm.password}
+                    onChange={(e) =>
+                      setAuthForm({ ...authForm, password: e.target.value })
+                    }
+                    className={`w-full px-4 py-3 pr-12 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${authForm.password ? "bg-white text-black" : "bg-white/5 text-white"
+                      }`}
+                    placeholder="Enter your password"
+                    required
+                  />
+
+                  {/* Icon inside input */}
+                  <span
+                    className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-white/70 hover:text-white"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                  </span>
+                </div>
               </div>
 
               <button

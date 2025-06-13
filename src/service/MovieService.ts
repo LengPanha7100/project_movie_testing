@@ -93,4 +93,7 @@ export const MovieService = {
   createMovie: async (data: MovieRequest): Promise<MovieRequest> => {
     return await RestService.post(Path.movie.create(), data);
   },
+  removeMovie: async (id: number): Promise<MovieResponse> => {
+    return await RestService.delete(Path.movie.remove(id));
+  },
 };

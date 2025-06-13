@@ -3,7 +3,7 @@ import { MovieService } from "@/service/MovieService";
 import { Category, Movie, MovieRequest } from "@/types/Movie";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaHeart, FaRegHeart, FaSearch, FaStar, FaTicketAlt, FaTimes } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaSearch, FaStar, FaTicketAlt, FaTimes, FaTrash } from "react-icons/fa";
 
 const Page = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -117,6 +117,28 @@ const Page = () => {
             )
         );
     };
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [movieToDelete, setMovieToDelete] = useState<Movie | null>(null);
+
+    const handleDeleteMovie = async (movieId: number) => {
+        // if (!confirm("Are you sure you want to delete this movie?")) return;
+        if (!movieId) return;
+        console.log("34", movieId);
+        try {
+            const res = await MovieService.removeMovie(movieId);
+            if (res != null) {
+                setMovieData((prev) => prev.filter((movie) => movie?.movieId !== movieId));
+
+            } else {
+                console.error("Failed to delete movie");
+            }
+        } catch (error) {
+            console.error("Error deleting movie:", error);
+        }
+    };
+    console.log("dagr34", movieToDelete?.movieId);
+
 
     return (
         <main className="min-h-screen bg-[#0a0a0a] text-white">
@@ -381,6 +403,17 @@ const Page = () => {
                                                 <FaRegHeart className="text-white/90 w-5 h-5" />
                                             )}
                                         </button>
+
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setMovieToDelete(movie);
+                                                setShowDeleteModal(true);
+                                            }}
+                                            className="p-3 bg-black/40 backdrop-blur-xl rounded-full transition-all duration-300 transform hover:scale-110"
+                                        >
+                                            <FaTrash className="text-white/80 w-5 h-5" />
+                                        </button>
                                     </div>
                                     <div className="p-6">
                                         <div className="flex justify-between items-start mb-4">
@@ -425,6 +458,39 @@ const Page = () => {
                     </div>
                 </div>
             </div>
+            {showDeleteModal && movieToDelete && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-[#1a1a1a] rounded-2xl p-8 w-full max-w-md mx-4">
+                        <h2 className="text-xl font-semibold text-white mb-4">Delete Movie</h2>
+                        <p className="text-white/70 mb-6">
+                            Are you sure you want to delete <span className="text-red-400 font-medium">"{movieToDelete.title}"</span>?
+                            This action cannot be undone.
+                        </p>
+                        <div className="flex justify-end space-x-4">
+                            <button
+                                onClick={() => {
+                                    setShowDeleteModal(false);
+                                    setMovieToDelete(null);
+                                }}
+                                className="px-5 py-2.5 bg-white/10 hover:bg-white/20 rounded-lg transition"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={async () => {
+                                    await handleDeleteMovie(movieToDelete?.movieId);
+                                    setShowDeleteModal(false);
+                                    setMovieToDelete(null);
+                                }}
+                                className="px-5 py-2.5 bg-red-600 hover:bg-red-700 rounded-lg transition text-white shadow-md"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </main >
     )
 }
